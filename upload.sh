@@ -1,7 +1,7 @@
 #!/bin/bash
 # http://blog.iron.io/2015/01/aws-lambda-vs-ironworker.html
 
-zip zboota-get.zip *.js
+zip -r zboota-get.zip *
 
 aws lambda upload-function \
   --region us-west-2 \
@@ -11,6 +11,7 @@ aws lambda upload-function \
   --mode event \
   --handler index.handler \
   --runtime nodejs 
+  --timeout 30
 #  --debug 
 #  --profile adminuser \
 

@@ -4,9 +4,9 @@
   "description": "Rewrite of zboota-server in nodejs to be deployed on AWS lambda instead of EC2. Zboota-server: App backend for zboota-app, gets tickets issued by Lebanese ISF, Parkmeter lebanon",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --timeout 5000"
   },
-  "homepage": "https://github.com/zboota-server-nodejs",
+  "homepage": "https://genesis.github.com",
   "repository": {
     "type": "git",
     "url": "git://github.com/shadiakiki1986/zboota-server-nodejs"
@@ -22,7 +22,9 @@
   "author": "Shadi Akiki",
   "license": "WTFPL",
   "dependencies": {
-    "request": "*"
+    "request": "*",
+    "xpath": "*",
+    "xmldom": "*"
   },
   "devDependencies": {
     "mocha": "^2.1.0",

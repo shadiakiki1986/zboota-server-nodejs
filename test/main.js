@@ -2,22 +2,26 @@
 var webIsf = require('../webIsf.js');
 var should = require('should');
 
-describe('zboota-server-nodejs', function() {
-
-	it('should get ISF data correctly', function() {
-	    webIsf.handler(
-              {a:"B",n:"123"},
+var testWebIsf = function(opts,expected,done) {
+    webIsf.handler(
+              opts,
               function(data) {
-                console.log(data);
-                data.a.should.eql("B");
-                data.n.should.eql("B");
-                data.isf.should.eql("None");
-              },
-              function(error) {
-                should.fail('Should not be called');
+//                console.log(data);
+                data.should.eql(expected);
+                done();
               }
             );
+};
 
+describe('zboota-server-nodejs', function() {
+
+	it('should get B/123 = None', function(done) {
+	    testWebIsf({a:"2:B",n:"123"},"None",done);
 	});
+
+	it('should get B/134431 = 28/11/2014', function(done) {
+	    testWebIsf({a:"2:B",n:"134431"},"28/11/2014",done);
+	});
+
 });
 
