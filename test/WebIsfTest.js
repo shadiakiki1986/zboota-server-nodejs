@@ -1,9 +1,9 @@
 'use strict';
-var webIsf = require('../webIsf.js');
+var WebIsf = require('app/WebIsf');
 var should = require('should');
 
 var testWebIsf = function(opts,expected,done) {
-    webIsf.handler(
+    WebIsf.handler(
               opts,
               function(data) {
 //                console.log(data);
@@ -13,7 +13,7 @@ var testWebIsf = function(opts,expected,done) {
             );
 };
 
-describe('zboota-server-nodejs', function() {
+describe('WebIsf tests', function() {
 
 	it('should get B/123 = None', function(done) {
 	    testWebIsf({a:"2:B",n:"123"},"None",done);

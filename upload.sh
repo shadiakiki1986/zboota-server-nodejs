@@ -3,7 +3,7 @@
 
 set -e
 
-zip -r zboota-get.zip *
+zip -q -r zboota-get.zip *
 
 # only in aws-cli/1.6.5 Python/2.7.3 Linux/3.2.0-29-generic-pae
 #aws lambda upload-function \
@@ -12,7 +12,7 @@ zip -r zboota-get.zip *
 #  --function-zip zboota-get.zip \
 #  --role arn:aws:iam::886436197218:role/lambda_dynamo \
 #  --mode event \
-#  --handler index.handler \
+#  --handler DdbGet.handler \
 #  --runtime nodejs
 #  --timeout 30
 ##  --debug 
@@ -28,7 +28,7 @@ aws lambda update-function-code \
 aws lambda update-function-configuration \
   --function-name zboota-get \
   --role arn:aws:iam::886436197218:role/lambda_dynamo \
-  --handler index.handler \
+  --handler index.handleGet \
   --description "Gets zboota of user's cars" \
   --timeout 30
 
