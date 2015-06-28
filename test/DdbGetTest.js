@@ -37,7 +37,12 @@ describe('DdbGet tests', function() {
 
                      testDdbGet([{"a":"B","n":"123"}],
              		{"B/123":{"a":"B","n":"123","isf":"None","pml":"Not available"}},
-             		done);
+             		function() {
+			    DdbGet.drop("B/123",{
+			      fail:function(err) { should.fail('Error: '+error);},
+			      succeed:done
+                            });
+                        });
              
                   }
                 });
@@ -60,8 +65,12 @@ describe('DdbGet tests', function() {
                                       "dm": "325,000 LL, due in April, mandatory inspection: not required",
                                       "hp": "1 - 10", "photoUrl": "f_Yt9PvO", "t": "Private cars", "y": "2015"}
                         },
-        		done);
-        
+             		function() {
+			    DdbGet.drop("B/123",{
+			      fail:function(err) { should.fail('Error: '+error);},
+			      succeed:done
+                            });
+                        });
              
                   }
                 });
