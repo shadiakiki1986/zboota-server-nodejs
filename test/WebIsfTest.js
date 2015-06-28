@@ -23,5 +23,9 @@ describe('WebIsf tests', function() {
 	    testWebIsf({a:"B",n:"134431"},"28/11/2014",done);
 	});
 
+	it('should get 2/134431 = Invalid area code', function(done) {
+	    testWebIsf({a:"2",n:"134431"},"Invalid area code",done);
+	});
+
 });
 
