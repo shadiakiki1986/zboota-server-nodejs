@@ -4,7 +4,7 @@
   "description": "Rewrite of zboota-server in nodejs to be deployed on AWS lambda instead of EC2. Zboota-server: App backend for zboota-app, gets tickets issued by Lebanese ISF, Parkmeter lebanon",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 60000"
+    "test": "mocha --timeout 120000"
   },
   "homepage": "https://genesis.github.com",
   "repository": {

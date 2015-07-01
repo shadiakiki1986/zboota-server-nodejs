@@ -27,5 +27,10 @@ describe('WebPml tests', function() {
 	    testWebPml({a:"2",n:"138288"},"Invalid area code",done);
 	});
 
+	it('Invalid plate number', function(done) {
+	    testWebPml({a:"B",n:"something"},
+		"Invalid plate number",done);
+	});
+
 });
 

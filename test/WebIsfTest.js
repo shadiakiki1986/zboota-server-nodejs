@@ -27,5 +27,10 @@ describe('WebIsf tests', function() {
 	    testWebIsf({a:"2",n:"134431"},"Invalid area code",done);
 	});
 
+	it('Invalid plate number', function(done) {
+	    testWebIsf({a:"B",n:"something"},
+		"Invalid plate number",done);
+	});
+
 });
 

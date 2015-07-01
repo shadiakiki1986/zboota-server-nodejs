@@ -11,6 +11,11 @@ describe('Validator tests', function() {
 	    Object.keys(Validator.mapPml()).filter(function(x) { return Object.keys(Validator.mapIsf()).indexOf(x)==-1; }).length.should.eql(0);
 	});
 
+	it('validNumber', function() {
+	    Validator.validNumber("B").should.eql(false);
+	    Validator.validNumber("2").should.eql(true);
+	});
+
 	it('mapIsf', function() {
 	    Object.keys(Validator.mapIsf()).length.should.above(3);
 	    Validator.mapIsf()["B"].should.not.eql("B");
