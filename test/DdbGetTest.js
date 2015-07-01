@@ -77,7 +77,7 @@ describe('DdbGet tests', function() {
     });
   });
 
-  it('mechanique', function(done) {
+  it('mechanique from web', function(done) {
     DdbGet.drop("B/123",{
       fail:function(err) { should.fail('Error: '+error);},
       succeed:function() {
@@ -85,6 +85,44 @@ describe('DdbGet tests', function() {
           [        {a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015"}],
           {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
           done
+        );
+      }
+    });
+  });
+
+  it('mechanique from cache', function(done) {
+    DdbGet.drop("B/123",{
+      fail:function(err) { should.fail('Error: '+error);},
+      succeed:function() {
+        testDdbGet(
+          [        {a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015"}],
+          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+          function() {
+            testDdbGet(
+              [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": "None", "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
+              {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+              done
+            );
+          }
+        );
+      }
+    });
+  });
+
+  it('mechanique from cache after late addition of mech info', function(done) {
+    DdbGet.drop("B/123",{
+      fail:function(err) { should.fail('Error: '+error);},
+      succeed:function() {
+        testDdbGet(
+          [        {a:"B", n:"123"}],
+          {"B/123":{a:"B", n:"123", isf:"None", pml:"None"}},
+          function() {
+            testDdbGet(
+              [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": "None", "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
+              {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+              done
+            );
+          }
         );
       }
     });
