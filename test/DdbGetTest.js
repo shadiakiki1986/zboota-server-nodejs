@@ -1,12 +1,11 @@
 'use strict';
 var DdbGet = require('app/DdbGet');
+var DdbManager = require('app/DdbManager');
 var should = require('should');
 
 var testDdbGet = function(opts,expected,done) {
-  DdbGet.handler(
-    opts,
-    {
-      succeed:function(data) {
+  DdbGet.init(opts,
+    { succeed:function(data) {
         // check dataTs
         var todayD=new Date().toISOString().substr(0,10);
         for(var d in data) { data[d].dataTs.substr(0,10).should.eql(todayD); }
@@ -14,50 +13,31 @@ var testDdbGet = function(opts,expected,done) {
         // drop dataTs and check rest
         for(var d in data) { delete data[d].dataTs; }
         data.should.eql(expected);
-
         done();
       },
-      fail:function(error) {
-         should.fail('Error: '+error);
-      }
-    }
+      fail:should.fail
+    },
+    true
   );
+  DdbGet.get();
 };
 
-describe('DdbGet tests', function() {
+describe.only('DdbGet tests', function() {
 
   it('should get B/123 isf and pml = None', function(done) {
-    DdbGet.drop("B/123",{
-      fail:function(err) { should.fail('Error: '+error);},
+    DdbManager.drop("B/123",{
+      fail:should.fail,
       succeed:function() {
-        DdbGet.exists(
-          "B/123",
-          {
-            fail:function(err) { should.fail('Error: '+error);},
-            succeed:function(res) {
-              res.should.eql(false);
-              testDdbGet(
-                [{"a":"B","n":"123"}],
-                {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
-                function() {
-                  DdbGet.drop("B/123",{
-                    fail:function(err) { should.fail('Error: '+error);},
-                    succeed:done
-                  });
-                }
-              );
-            }
-          }
+        testDdbGet(
+          [{"a":"B","n":"123"}],
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          done
         );
       }
     });
   });
 
   it('should get B/123 = None and B/134431 = 28/11/2014', function(done) {
-    DdbGet.exists("B/134431",{
-      fail:function(err) { should.fail('Error: '+error);},
-      succeed:function(res) {
-        res.should.eql(true);
         testDdbGet(
           [ {"a":"B","n":"123"},
             {a:"B",n:"134431"}
@@ -67,19 +47,13 @@ describe('DdbGet tests', function() {
               "dm": "325,000 LL, due in April, mandatory inspection: not required",
               "hp": "1 - 10", "photoUrl": "f_Yt9PvO", "t": "Private cars", "y": "2015"}
           },
-          function() {
-            DdbGet.drop("B/123",{
-              fail:function(err) { should.fail('Error: '+error);},
-              succeed:done
-            });
-          });
-      }
-    });
+          done
+        );
   });
 
   it('mechanique from web', function(done) {
-    DdbGet.drop("B/123",{
-      fail:function(err) { should.fail('Error: '+error);},
+    DdbManager.drop("B/123",{
+      fail:function(err) { should.fail('Error: '+error); done(); },
       succeed:function() {
         testDdbGet(
           [        {a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015"}],
@@ -91,7 +65,7 @@ describe('DdbGet tests', function() {
   });
 
   it('mechanique from cache', function(done) {
-    DdbGet.drop("B/123",{
+    DdbManager.drop("B/123",{
       fail:function(err) { should.fail('Error: '+error);},
       succeed:function() {
         testDdbGet(
@@ -110,7 +84,7 @@ describe('DdbGet tests', function() {
   });
 
   it('mechanique from cache after late addition of mech info', function(done) {
-    DdbGet.drop("B/123",{
+    DdbManager.drop("B/123",{
       fail:function(err) { should.fail('Error: '+error);},
       succeed:function() {
         testDdbGet(
@@ -130,7 +104,7 @@ describe('DdbGet tests', function() {
 
   it('should get B/123 faster after caching', function(done) {
 
-    DdbGet.drop("B/123",{
+    DdbManager.drop("B/123",{
       fail:function(err) { should.fail('Error: '+error);},
       succeed:function() {
         var start1 = new Date().getTime();
@@ -139,28 +113,22 @@ describe('DdbGet tests', function() {
           {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
           function() {
             var end1 = new Date().getTime();
-            DdbGet.exists("B/123",{
-              fail:function(err) { should.fail('Error: '+error);},
-              succeed:function(res) {
-                res.should.eql(true);
-                var start2 = new Date().getTime();
-                testDdbGet([{"a":"B","n":"123"}],
-                  {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
-                  function() {
-                    var end2 = new Date().getTime();
-                    (end1-start1).should.above(end2-start2);
-                    (end2-start2).should.below(1000);
-                    DdbGet.drop("B/123",{
-                      fail:function(err) { should.fail('Error: '+error);},
-                      succeed:done
-                    });
-                  });
+            var start2 = new Date().getTime();
+            testDdbGet([{"a":"B","n":"123"}],
+              {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+              function() {
+                var end2 = new Date().getTime();
+                (end1-start1).should.above(end2-start2);
+                (end2-start2).should.below(1000);
+                done();
               }
-            });
-          });
-        }
-      });
+            );
+          }
+        );
+      }
     });
+  });
+
 
 });
 
