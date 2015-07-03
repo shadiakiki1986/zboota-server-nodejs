@@ -22,7 +22,7 @@ var testDdbGet = function(opts,expected,done) {
   DdbGet.get();
 };
 
-describe.only('DdbGet tests', function() {
+describe('DdbGet tests', function() {
 
   it('should get B/123 isf and pml = None', function(done) {
     DdbManager.drop("B/123",{
