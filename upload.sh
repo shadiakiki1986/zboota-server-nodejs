@@ -12,7 +12,7 @@ zip -q -r zboota-get.zip *
 #  --function-zip zboota-get.zip \
 #  --role arn:aws:iam::886436197218:role/lambda_dynamo \
 #  --mode event \
-#  --handler DdbManager.getNotSilent \
+#  --handler node_modules/app/DdbManager.getNotSilent \
 #  --runtime nodejs
 #  --timeout 30
 ##  --debug 
@@ -28,7 +28,7 @@ aws lambda update-function-code \
 aws lambda update-function-configuration \
   --function-name zboota-get \
   --role arn:aws:iam::886436197218:role/lambda_dynamo \
-  --handler DdbManager.getNotSilent \
+  --handler node_modules/app/DdbManager.getNotSilent \
   --description "Gets zboota of user's cars" \
   --timeout 30
 
