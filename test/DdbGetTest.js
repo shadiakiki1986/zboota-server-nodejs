@@ -22,7 +22,7 @@ var testDdbGet = function(opts,expected,done) {
   DdbGet.get();
 };
 
-describe('DdbGet tests', function() {
+describe('DdbGet retrieval', function() {
 
   it('should get B/123 isf and pml = None', function(done) {
     DdbManager.drop("B/123",{
@@ -43,9 +43,7 @@ describe('DdbGet tests', function() {
             {a:"B",n:"134431"}
           ],
           { "B/123":{"a":"B","n":"123","isf":"None","pml":"None"},
-            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"None",
-              "dm": "325,000 LL, due in April, mandatory inspection: not required",
-              "hp": "1 - 10", "photoUrl": "f_Yt9PvO", "t": "Private cars", "y": "2015"}
+            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"None", "photoUrl": "f_Yt9PvO"}
           },
           done
         );
@@ -83,6 +81,12 @@ describe('DdbGet tests', function() {
     });
   });
 
+}); // end describe
+
+
+
+describe('DdbGet consistency', function() {
+
   it('mechanique from cache after late addition of mech info', function(done) {
     DdbManager.drop("B/123",{
       fail:function(err) { should.fail('Error: '+error);},
@@ -101,6 +105,31 @@ describe('DdbGet tests', function() {
       }
     });
   });
+
+  it('mechanique info dropped should not include mech result even if in cache', function(done) {
+    DdbManager.drop("B/123",{
+      fail:function(err) { should.fail('Error: '+error);},
+      succeed:function() {
+        testDdbGet(
+          [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": "None", "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
+          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+          function() {
+            testDdbGet(
+              [ { "n": "123", "a": "B", "l": "test" } ],
+              {"B/123":{a:"B", n:"123", isf:"None", pml:"None"}},
+              done
+            );
+          }
+        );
+      }
+    });
+  });
+
+}); // end describe
+
+
+
+describe('DdbGet speed', function() {
 
   it('should get B/123 faster after caching', function(done) {
 
