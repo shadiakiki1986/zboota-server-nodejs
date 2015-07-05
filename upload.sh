@@ -3,13 +3,13 @@
 
 set -e
 
-zip -q -r zboota-get.zip *
+zip -q -r zboota-server-nodejs.zip *
 
 # only in aws-cli/1.6.5 Python/2.7.3 Linux/3.2.0-29-generic-pae
 #aws lambda upload-function \
 #  --region us-west-2 \
 #  --function-name zboota-get \
-#  --function-zip zboota-get.zip \
+#  --function-zip zboota-server-nodejs.zip \
 #  --role arn:aws:iam::886436197218:role/lambda_dynamo \
 #  --mode event \
 #  --handler node_modules/app/DdbManager.getNotSilent \
@@ -18,18 +18,37 @@ zip -q -r zboota-get.zip *
 ##  --debug 
 ##  --profile adminuser \
 
-aws s3 cp zboota-get.zip s3://zboota-server/lambda-zip/zboota-get.zip
+aws s3 cp zboota-server-nodejs.zip s3://zboota-server/lambda-zip/zboota-server-nodejs.zip
+upsertFunction() {
+  aws lambda list-functions|grep "\"FunctionName\": \"$1\""
+  if [ $? == 0 ]; then
+    echo "Updating function $1"
+    aws lambda update-function-code \
+      --function-name $1 \
+      --s3-bucket zboota-server \
+      --s3-key lambda-zip/zboota-server-nodejs.zip
+    
+    aws lambda update-function-configuration \
+      --function-name $1 \
+      --role arn:aws:iam::886436197218:role/lambda_dynamo \
+      --handler node_modules/app/$2 \
+      --description "Gets zboota of user's cars" \
+      --timeout 30
+  else
+    echo "Creating function $1"
+    aws lambda create-function \
+      --function-name $1 \
+      --run-time nodejs
+      --role arn:aws:iam::886436197218:role/lambda_dynamo \
+      --handler node_modules/app/$2 \
+      --description $3 \
+      --timeout 30 \
+      --code S3Bucket="zboota-server",S3Key="lambda-zip/zboota-server-nodejs.zip"
+  fi
+}
 
-aws lambda update-function-code \
-  --function-name zboota-get \
-  --s3-bucket zboota-server \
-  --s3-key lambda-zip/zboota-get.zip
+upsertFunction "zboota-get"   "DdbManager.getNotSilent" "Gets zboota of user's cars"
+upsertFunction "zboota-login" "DdbUserWrapper.login" "Login of user to get list of cars"
 
-aws lambda update-function-configuration \
-  --function-name zboota-get \
-  --role arn:aws:iam::886436197218:role/lambda_dynamo \
-  --handler node_modules/app/DdbManager.getNotSilent \
-  --description "Gets zboota of user's cars" \
-  --timeout 30
-
-rm zboota-get.zip
+rm zboota-server-nodejs.zip
+aws s3 rm s3://zboota-server/lambda-zip/zboota-server-nodejs.zip
