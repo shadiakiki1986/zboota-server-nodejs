@@ -22,7 +22,7 @@ function testReset(done) {
 	});
 }
 
-describe.only('DdbUser tests', function() {
+describe('DdbUser login', function() {
 
   it('reset', function(done) { testReset(done); });
 
@@ -91,15 +91,19 @@ describe.only('DdbUser tests', function() {
 	DdbUser.loginCore(
 	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
 	  { fail: function(err) {
+	      err.should.eql("Wrong password.");
 	DdbUser.loginCore(
 	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
 	  { fail: function(err) {
+	      err.should.eql("Wrong password.");
 	DdbUser.loginCore(
 	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
 	  { fail: function(err) {
+	      err.should.eql("Wrong password.");
 	DdbUser.loginCore(
 	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
 	  { fail: function(err) {
+	      err.should.eql("Wrong password.");
 	DdbUser.loginCore(
 	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
 	  { fail: function(err) {
@@ -123,5 +127,33 @@ describe.only('DdbUser tests', function() {
   });
 
   it('reset 2', function(done) { testReset(done); });
+
+});
+
+
+describe.only('DdbUser new', function() {
+
+  it('new user existing', function(done) {
+	DdbUser.init(
+	  { email:"shadiakiki1986@yahoo.com" },
+	  { fail:function(err) { err.should.eql('Email address already registered.'); done(); },
+	    succeed: function() { should.fail('Shouldnt get here'); }
+	  },
+	  true
+	);
+        DdbUser.newUser(function() { should.fail('Shouldnt get here'); });
+    });
+
+  it('new user inexistant', function(done) {
+	DdbUser.init(
+	  { email:"test@abc.com" },
+	  { fail:function(err) { should.fail("Error",err); },
+	    succeed: function() { should.fail('Shouldnt get here'); }
+	  },
+	  true
+	);
+        DdbUser.newUser(function() { done(); });
+    });
+
 
 });

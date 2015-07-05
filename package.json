@@ -27,7 +27,9 @@
     "xmldom": "*",
     "aws-sdk": "*",
     "dynamodb-doc":"*",
-    "tough-cookie":"*"
+    "tough-cookie":"*",
+    "mailgun-js":"*",
+    "mailgun-email-validation":"*"
   },
   "devDependencies": {
     "mocha": "*",

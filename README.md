@@ -19,7 +19,13 @@ Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in n
     # Note if got "Unable to parse config file: http://stackoverflow.com/a/26078371
 
  * Install this package''s requirements
-    npm install
 
-* Testing: npm test
+    npm install
+    cp node_modues/app/config-sample.json node_modues/app/config.json # and edit parameters
+
+* Testing
+
+    npm install --dev
+    npm test
+
 * Upload to AWS lambda: bash upload.sh
