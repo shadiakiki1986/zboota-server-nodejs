@@ -6,17 +6,17 @@ var pass="dummy";
 
 function testReset(done) {
 	// drop passFail flag so as not to interfere with demo usage
-	DdbUser.init(
+	var du=new DdbUser(
 	  { email:"shadiakiki1986@yahoo.com", pass:"dummy" },
 	  { fail:function(err) { should.fail('Error: '+err); },
 	    succeed: function() { ; } // unneeded
 	  },
 	  true
 	);
-	DdbUser.connect(function() {
-          DdbUser.dropPassFail(function() {
+	du.connect(function() {
+          du.dropPassFail(function() {
             // set the password for other tests
-            pass=DdbUser.getEntry()['pass']; 
+            pass=du.getEntry()['pass']; 
 	    done();
 	  });
 	});
@@ -27,32 +27,33 @@ describe('DdbUser login', function() {
   it('reset', function(done) { testReset(done); });
 
   it('login', function(done) {
-	DdbUser.loginCore(
-	  { email:"shadiakiki1986@yahoo.com", pass:pass },
-	  { fail:function(err) { should.fail('Error: '+err);},
-	    succeed: function() {
-              DdbUser.getEntry().hasOwnProperty("lpns").should.eql(true);
-	      done();
-            }
-	  },
-	  true
-	);
-    });
+    var du = new DdbUser(
+      { email:"shadiakiki1986@yahoo.com", pass:pass },
+      { fail:function(err) { should.fail('Error: '+err);},
+        succeed: function() {
+          du.getEntry().hasOwnProperty("lpns").should.eql(true);
+          done();
+        }
+      },
+      true
+    );
+    du.loginCore();
+  });
 
   it('account fail flag is incremented', function(done) {
-	DdbUser.loginCore(
+	var du = new DdbUser(
 	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
 	  { fail: function(err) {
 	      err.should.eql("Wrong password.");
-              DdbUser.init(
+              var du2=new DdbUser(
                 {email:"shadiakiki1986@yahoo.com",pass:"dummy"},
                 { fail:function(err) { should.fail('Error: '+err);},
                   succeed: function() { ; }
                 },
                 true
               );
-              DdbUser.connect(function() {
-                var ee=DdbUser.getEntry();
+              du2.connect(function() {
+                var ee=du2.getEntry();
                 ee.hasOwnProperty("passFail").should.eql(true);
                 ee.passFail.should.eql(1);
                 done();
@@ -62,22 +63,23 @@ describe('DdbUser login', function() {
 	  },
 	  true
 	);
+	du.loginCore();
   });
 
   it('fail flag is dropped after a successful login', function(done) {
-	DdbUser.loginCore(
+	var du = new DdbUser(
 	  { email: "shadiakiki1986@yahoo.com", pass: pass },
 	  { fail: function(err) { should.fail("Shouldn't get here"); },
 	    succeed: function() {
-              DdbUser.init(
-                {email:"shadiakiki1986@yahoo.com",pass:"dummy"},
+              var du2=new DdbUser(
+                { email:"shadiakiki1986@yahoo.com", pass:"dummy" },
                 { fail:function(err) { should.fail('Error: '+err);},
                   succeed: function() { ; }
                 },
                 true
               );
-              DdbUser.connect(function() {
-                var ee=DdbUser.getEntry();
+              du2.connect(function() {
+                var ee=du2.getEntry();
                 ee.hasOwnProperty("passFail").should.eql(false);
                 done();
               });
@@ -85,45 +87,26 @@ describe('DdbUser login', function() {
 	  },
 	  true
 	);
+        du.loginCore();
   });
 
   it('account is locked after 3? failed attempts', function(done) {
-	DdbUser.loginCore(
+        var n=0;
+	var du = new DdbUser(
 	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
 	  { fail: function(err) {
-	      err.should.eql("Wrong password.");
-	DdbUser.loginCore(
-	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
-	  { fail: function(err) {
-	      err.should.eql("Wrong password.");
-	DdbUser.loginCore(
-	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
-	  { fail: function(err) {
-	      err.should.eql("Wrong password.");
-	DdbUser.loginCore(
-	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
-	  { fail: function(err) {
-	      err.should.eql("Wrong password.");
-	DdbUser.loginCore(
-	  { email: "shadiakiki1986@yahoo.com", pass: "0000" },
-	  { fail: function(err) {
-	      err.should.eql("Account locked.");
-              done();
+              n++;
+	      if(n<=5) {
+                err.should.eql("Wrong password.");
+                du.loginCore();
+              } else {
+                err.should.eql("Account locked.");
+                done();
+              }
  	    },
 	    succeed: function() { should.fail("Shouldn't get here"); }
           }, true);
- 	    },
-	    succeed: function() { should.fail("Shouldn't get here"); }
-          }, true);
- 	    },
-	    succeed: function() { should.fail("Shouldn't get here"); }
-          }, true);
- 	    },
-	    succeed: function() { should.fail("Shouldn't get here"); }
-          }, true);
- 	    },
-	    succeed: function() { should.fail("Shouldn't get here"); }
-          }, true);
+        du.loginCore();
   });
 
   it('reset 2', function(done) { testReset(done); });
@@ -131,29 +114,36 @@ describe('DdbUser login', function() {
 });
 
 
-describe.only('DdbUser new', function() {
+describe('DdbUser new', function() {
 
   it('new user existing', function(done) {
-	DdbUser.init(
+	var du = new DdbUser(
 	  { email:"shadiakiki1986@yahoo.com" },
-	  { fail:function(err) { err.should.eql('Email address already registered.'); done(); },
+	  { fail:function(err) {
+              err.should.eql('Email address already registered.');
+              done();
+            },
 	    succeed: function() { should.fail('Shouldnt get here'); }
 	  },
 	  true
 	);
-        DdbUser.newUser(function() { should.fail('Shouldnt get here'); });
+        du.newUser();
     });
+
+//  it('dummy',function(done) { setTimeout(done,6000); });
 
   it('new user inexistant', function(done) {
-	DdbUser.init(
+	var du = new DdbUser(
 	  { email:"test@abc.com" },
 	  { fail:function(err) { should.fail("Error",err); },
-	    succeed: function() { should.fail('Shouldnt get here'); }
+	    succeed: function() {
+              du.context.succeed=done;
+              du.newUser();
+            }
 	  },
 	  true
 	);
-        DdbUser.newUser(function() { done(); });
+        du.delete();
     });
-
-
 });
+

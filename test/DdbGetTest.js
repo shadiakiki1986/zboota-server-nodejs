@@ -43,7 +43,7 @@ describe('DdbGet retrieval', function() {
             {a:"B",n:"134431"}
           ],
           { "B/123":{"a":"B","n":"123","isf":"None","pml":"None"},
-            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"None", "photoUrl": "f_Yt9PvO"}
+            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"None"}
           },
           done
         );
