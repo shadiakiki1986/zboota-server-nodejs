@@ -23,7 +23,7 @@ function testReset(done) {
 	});
 }
 
-describe.only('DdbUserWrapper login', function() {
+describe('DdbUserWrapper login', function() {
 
   it('login fail', function(done) {
     DdbUserWrapper.login(
