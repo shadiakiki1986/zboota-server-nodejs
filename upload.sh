@@ -50,6 +50,7 @@ upsertFunction() {
 
 upsertFunction "zboota-get"   "DdbManager.getNotSilent" "Gets zboota of user's cars"
 upsertFunction "zboota-login" "DdbUserWrapper.login" "Login of user to get list of cars"
+upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Emails password to user"
 
 rm zboota-server-nodejs.zip
 aws s3 rm s3://zboota-server/lambda-zip/zboota-server-nodejs.zip
