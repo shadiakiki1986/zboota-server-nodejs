@@ -26,6 +26,28 @@ describe('DdbUser login', function() {
 
   it('reset', function(done) { testReset(done); });
 
+  it('login missing email', function(done) {
+    var du = new DdbUser(
+      {  },
+      { fail:function(err) { err.should.eql('Missing email'); done(); },
+        succeed: function() { should.fail("Shouldnt get here"); }
+      },
+      true
+    );
+    if(!du.invalid) du.loginCore();
+  });
+
+  it('login missing password', function(done) {
+    var du = new DdbUser(
+      { email: "shadiakiki1986@yahoo.com" },
+      { fail:function(err) { err.should.eql('Missing password'); done(); },
+        succeed: function() { should.fail("Shouldnt get here"); }
+      },
+      true
+    );
+    if(!du.invalid) du.loginCore();
+  });
+
   it('login', function(done) {
     var du = new DdbUser(
       { email:"shadiakiki1986@yahoo.com", pass:pass },
@@ -37,7 +59,7 @@ describe('DdbUser login', function() {
       },
       true
     );
-    du.loginCore();
+    if(!du.invalid) du.loginCore();
   });
 
   it('account fail flag is incremented', function(done) {
@@ -63,7 +85,7 @@ describe('DdbUser login', function() {
 	  },
 	  true
 	);
-	du.loginCore();
+        if(!du.invalid) du.loginCore();
   });
 
   it('fail flag is dropped after a successful login', function(done) {
@@ -87,7 +109,7 @@ describe('DdbUser login', function() {
 	  },
 	  true
 	);
-        du.loginCore();
+        if(!du.invalid) du.loginCore();
   });
 
   it('account is locked after 3? failed attempts', function(done) {
@@ -106,7 +128,7 @@ describe('DdbUser login', function() {
  	    },
 	    succeed: function() { should.fail("Shouldn't get here"); }
           }, true);
-        du.loginCore();
+        if(!du.invalid) du.loginCore();
   });
 
   it('reset 2', function(done) { testReset(done); });
@@ -125,7 +147,8 @@ describe('DdbUser new', function() {
             },
 	    succeed: function() { should.fail('Shouldnt get here'); }
 	  },
-	  true
+	  true,
+          true
 	);
         du.newUser();
     });
@@ -141,7 +164,8 @@ describe('DdbUser new', function() {
               du.newUser();
             }
 	  },
-	  true
+	  true,
+          true
 	);
         du.delete();
     });
