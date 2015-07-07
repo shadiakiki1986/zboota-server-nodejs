@@ -138,7 +138,22 @@ describe('DdbUser login', function() {
 
 describe('DdbUser new', function() {
 
-  it('new user existing', function(done) {
+  it('invalid', function(done) {
+	var du = new DdbUser(
+	  { email:"shadiakiki1986" },
+	  { fail:function(err) {
+              err.should.eql('Invalid email shadiakiki1986');
+              done();
+            },
+	    succeed: function() { should.fail('Shouldnt get here'); }
+	  },
+	  true,
+          true
+	);
+        du.newUser();
+    });
+
+  it('existing', function(done) {
 	var du = new DdbUser(
 	  { email:"shadiakiki1986@yahoo.com" },
 	  { fail:function(err) {
@@ -155,12 +170,15 @@ describe('DdbUser new', function() {
 
 //  it('dummy',function(done) { setTimeout(done,6000); });
 
-  it('new user inexistant', function(done) {
+  it('inexistant', function(done) {
 	var du = new DdbUser(
 	  { email:"test@abc.com" },
 	  { fail:function(err) { should.fail("Error",err); },
 	    succeed: function() {
-              du.context.succeed=done;
+              du.context.succeed=function(res) {
+                res.should.eql({});
+                done();
+              }
               du.newUser();
             }
 	  },
@@ -169,5 +187,6 @@ describe('DdbUser new', function() {
 	);
         du.delete();
     });
+
 });
 

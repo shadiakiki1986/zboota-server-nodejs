@@ -28,8 +28,7 @@
     "aws-sdk": "*",
     "dynamodb-doc":"*",
     "tough-cookie":"*",
-    "mailgun-js":"*",
-    "mailgun-email-validation":"*"
+    "mailgun-js":"*"
   },
   "devDependencies": {
     "mocha": "*",

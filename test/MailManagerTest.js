@@ -6,22 +6,20 @@ describe('MailManager tests', function() {
 
   it('email valid', function(done) {
 	MailManager.mailValidate("shadiakiki1986@yahoo.com",
-	  { fail:function(err) { should.fail('Error: '+err);},
-	    succeed: function(valid) {
-              valid.should.eql(true);
-	      done();
-            }
+	  function(err,valid) {
+            if(err) { should.fail('Error: '+err); return; }
+            valid.should.eql(true);
+            done();
 	  }
 	);
     });
 
   it('email invalid', function(done) {
 	MailManager.mailValidate("shadiakiki1986",
-	  { fail:function(err) { should.fail('Error: '+err);},
-	    succeed: function(valid) {
-              valid.should.eql(false);
-	      done();
-            }
+	  function(err,valid) {
+            if(err) { should.fail('Error: '+err); return; }
+            valid.should.eql(false);
+            done();
 	  }
 	);
     });
