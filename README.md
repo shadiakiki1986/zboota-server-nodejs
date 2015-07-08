@@ -9,11 +9,13 @@ Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in n
 * Install aws CLI
  * http://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-with-pip
 
+```
     apt-get remove python-pip
     easy_install pip
     sudo pip install awscli
     sudo ln -s /usr/local/bin/aws /usr/bin/aws
     aws configure
+```
 
 * DO NOT USE THIS BECAUSE IT's an old version that doesn't support lambda:
 
