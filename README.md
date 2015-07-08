@@ -32,9 +32,8 @@ npm test
 * lambda functions: bash upload.sh
 * header message:
  * The header message is stored in a file on the S3 bucket: https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt
- * It needs to be made public on aws s3 (right-click on the folder 'headerMessage' / properties / make public)
- * Also the bucket zboota-server needs to have CORS enabled (right click on zboota-server, Permissions, Edit CORS)
+ * It requires the bucket zboota-server to have CORS enabled (right click on zboota-server, Permissions, Edit CORS)
  * To update the message, use the following (of course after configuring aws CLI ( check above installation notes for more details ) ):
 ```
-tf=`tempfile` && echo "new message" > $tf && aws s3 cp $tf s3://zboota-server/headerMessage/headerMessage.txt && rm $tf
+tf=`tempfile` && echo "new message" > $tf && aws s3 cp $tf s3://zboota-server/headerMessage/headerMessage.txt --acl public-read && rm $tf
 ```
