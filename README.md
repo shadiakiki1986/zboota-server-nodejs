@@ -1,9 +1,7 @@
 # zboota-server-nodejs
 Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in nodejs to be deployed using AWS Lambda and AWS S3 services instead of running an AWS EC2 continuously for this.
-
-''Zboota-server'': Php implementation of app backend for [zboota-app](https://github.com/shadiakiki1986/zboota-app)
-
-''Zboota-app'': gets tickets issued by Lebanese ISF, Parkmeter lebanon, ...
+* ''Zboota-server'': Php implementation of app backend for [zboota-app](https://github.com/shadiakiki1986/zboota-app)
+* ''Zboota-app'': gets tickets issued by Lebanese ISF, Parkmeter lebanon, ...
 
 # Installing
 * Install aws CLI
@@ -15,7 +13,7 @@ sudo pip install awscli
 sudo ln -s /usr/local/bin/aws /usr/bin/aws
 aws configure
 ```
- * DO NOT USE THIS BECAUSE IT's an old version that doesn't support lambda: `sudo apt-get install awscli`
+ * Do not use this because it's an old version that doesn't support lambda: `sudo apt-get install awscli`
  * Note if got "Unable to parse config file", check http://stackoverflow.com/a/26078371
 
 * Install this package''s requirements
@@ -29,7 +27,7 @@ npm install --dev
 npm test
 ```
 # Upload to AWS
-* lambda functions: bash upload.sh
+* lambda functions: `bash upload.sh`
 * header message:
  * The header message is stored in a file on the S3 bucket: https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt
  * It requires the bucket zboota-server to have CORS enabled (right click on zboota-server, Permissions, Edit CORS)
@@ -37,3 +35,4 @@ npm test
 ```
 tf=`tempfile` && echo "new message" > $tf && aws s3 cp $tf s3://zboota-server/headerMessage/headerMessage.txt --acl public-read && rm $tf
 ```
+ * To update to an empty message, just replace `"new message"` with `""`
