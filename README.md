@@ -8,7 +8,6 @@ Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in n
 # Installing
 * Install aws CLI
  * http://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-with-pip
-
 ```
     apt-get remove python-pip
     easy_install pip
@@ -16,12 +15,8 @@ Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in n
     sudo ln -s /usr/local/bin/aws /usr/bin/aws
     aws configure
 ```
-
-* DO NOT USE THIS BECAUSE IT's an old version that doesn't support lambda:
-
-    sudo apt-get install awscli
-
-* Note if got "Unable to parse config file", check http://stackoverflow.com/a/26078371
+ * DO NOT USE THIS BECAUSE IT's an old version that doesn't support lambda: `sudo apt-get install awscli`
+ * Note if got "Unable to parse config file", check http://stackoverflow.com/a/26078371
 
 * Install this package''s requirements
 
