@@ -15,11 +15,11 @@ Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in n
     sudo ln -s /usr/local/bin/aws /usr/bin/aws
     aws configure
 
-  * DO NOT USE THIS BECAUSE IT's an old version that doesn't support lambda:
+* DO NOT USE THIS BECAUSE IT's an old version that doesn't support lambda:
 
     sudo apt-get install awscli
 
-  * Note if got "Unable to parse config file", check http://stackoverflow.com/a/26078371
+* Note if got "Unable to parse config file", check http://stackoverflow.com/a/26078371
 
 * Install this package''s requirements
 
