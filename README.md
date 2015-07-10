@@ -21,6 +21,9 @@ aws configure
 npm install
 cp node_modues/app/config-sample.json node_modues/app/config.json # and edit parameters
 ```
+* Note on AWS credentials: for travis-ci, AWS credentials in the nodejs code are gotten from the encrypted environmental variables in the .travis.yml file
+ * check http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html#Credentials_from_Environment_Variables
+
 # Testing
 Local tests
 ```

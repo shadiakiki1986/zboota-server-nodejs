@@ -51,7 +51,7 @@ describe('DdbGet retrieval', function() {
 
   it('mechanique from web', function(done) {
     DdbManager.drop("B/123",{
-      fail:function(err) { should.fail('Error: '+error); done(); },
+      fail:function(err) { should.fail('Error: '+err); done(); },
       succeed:function() {
         testDdbGet(
           [        {a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015"}],
@@ -64,7 +64,7 @@ describe('DdbGet retrieval', function() {
 
   it('mechanique from cache', function(done) {
     DdbManager.drop("B/123",{
-      fail:function(err) { should.fail('Error: '+error);},
+      fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         testDdbGet(
           [        {a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015"}],
@@ -89,7 +89,7 @@ describe('DdbGet consistency', function() {
 
   it('mechanique from cache after late addition of mech info', function(done) {
     DdbManager.drop("B/123",{
-      fail:function(err) { should.fail('Error: '+error);},
+      fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         testDdbGet(
           [        {a:"B", n:"123"}],
@@ -108,7 +108,7 @@ describe('DdbGet consistency', function() {
 
   it('mechanique info dropped should not include mech result even if in cache', function(done) {
     DdbManager.drop("B/123",{
-      fail:function(err) { should.fail('Error: '+error);},
+      fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         testDdbGet(
           [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": "None", "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
@@ -134,7 +134,7 @@ describe('DdbGet speed', function() {
   it('should get B/123 faster after caching', function(done) {
 
     DdbManager.drop("B/123",{
-      fail:function(err) { should.fail('Error: '+error);},
+      fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         var start1 = new Date().getTime();
         testDdbGet(
