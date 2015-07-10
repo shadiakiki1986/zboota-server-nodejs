@@ -22,10 +22,14 @@ npm install
 cp node_modues/app/config-sample.json node_modues/app/config.json # and edit parameters
 ```
 # Testing
+Local tests
 ```
 npm install --dev
 npm test
 ```
+Running on http://travis-ci.org
+* [![Build Status](https://secure.travis-ci.org/shadiakiki1986/zboota-server-nodejs.png)](http://travis-ci.org/shadiakiki1986/zboota-server-nodejs)
+
 # Upload to AWS
 * lambda functions: `bash upload.sh`
 * header message:
