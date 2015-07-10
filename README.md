@@ -15,14 +15,14 @@ aws configure
 ```
  * Do not use this because it's an old version that doesn't support lambda: `sudo apt-get install awscli`
  * Note if got "Unable to parse config file", check http://stackoverflow.com/a/26078371
+ * Note on AWS credentials: for travis-ci, AWS credentials in the nodejs code are gotten from the encrypted environmental variables in the .travis.yml file
+  * check http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html#Credentials_from_Environment_Variables
 
 * Install this package''s requirements
 ```
 npm install
 cp node_modues/app/config-sample.json node_modues/app/config.json # and edit parameters
 ```
-* Note on AWS credentials: for travis-ci, AWS credentials in the nodejs code are gotten from the encrypted environmental variables in the .travis.yml file
- * check http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html#Credentials_from_Environment_Variables
 
 # Testing
 Local tests
