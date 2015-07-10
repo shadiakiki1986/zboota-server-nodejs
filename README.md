@@ -31,7 +31,7 @@ Running on http://travis-ci.org
 * [![Build Status](https://secure.travis-ci.org/shadiakiki1986/zboota-server-nodejs.png)](http://travis-ci.org/shadiakiki1986/zboota-server-nodejs)
 
 # Upload to AWS
-* lambda functions: `bash upload.sh`
+* lambda functions: `bash scripts/upload.sh`
 * header message:
  * The header message is stored in a file on the S3 bucket: https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt
  * It requires the bucket zboota-server to have CORS enabled (right click on zboota-server, Permissions, Edit CORS)
