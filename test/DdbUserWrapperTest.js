@@ -46,7 +46,7 @@ describe('DdbUserWrapper login', function() {
       { email:"shadiakiki1986@yahoo.com", pass:pass },
       { fail:function(err) { should.fail('Error: '+err);},
         succeed: function(data) {
-          data.should.eql("{}");
+          data.should.eql("[]");
           done();
         }
       }
