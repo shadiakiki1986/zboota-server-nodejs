@@ -1,5 +1,12 @@
 #!/bin/bash
 # http://blog.iron.io/2015/01/aws-lambda-vs-ironworker.html
+# Usage: from root directory: bash scripts/upload.sh
+
+if [ ! -d scripts ]; then
+  echo "Please use this script from the root folder"
+  echo "Usage bash scripts/upload.sh"
+  exit
+fi
 
 # cannot have grep FunctionName line below with this # set -e
 
