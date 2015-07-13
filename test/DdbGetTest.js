@@ -185,7 +185,7 @@ describe('DdbGet invalid event', function() {
   it('fail on missing area', function(done) {
     var dg = new DdbGet([{n:"123"}],
       { succeed:function(data) { should.fail("Shouldnt get here"); },
-        fail:function(msg) { msg.should.eql("Missing area"); done(); }
+        fail:function(msg) { msg.should.eql("Event elements should all have n and a fields"); done(); }
       },
       true
     );
@@ -194,7 +194,7 @@ describe('DdbGet invalid event', function() {
   it('fail on missing number', function(done) {
     var dg = new DdbGet([{a:"B"}],
       { succeed:function(data) { should.fail("Shouldnt get here"); },
-        fail:function(msg) { msg.should.eql("Missing number"); done(); }
+        fail:function(msg) { msg.should.eql("Event elements should all have n and a fields"); done(); }
       },
       true
     );
@@ -203,7 +203,7 @@ describe('DdbGet invalid event', function() {
   it('fail on invalid area', function(done) {
     var dg = new DdbGet([{a:123, n: 123}],
       { succeed:function(data) { should.fail("Shouldnt get here"); },
-        fail:function(msg) { msg.should.eql("Invalid area"); done(); }
+        fail:function(msg) { msg.should.eql("Some area fields are invalid"); done(); }
       },
       true
     );
@@ -212,7 +212,16 @@ describe('DdbGet invalid event', function() {
   it('fail on invalid number', function(done) {
     var dg = new DdbGet([{a:"B", n: "dummy"}],
       { succeed:function(data) { should.fail("Shouldnt get here"); },
-        fail:function(msg) { msg.should.eql("Invalid number"); done(); }
+        fail:function(msg) { msg.should.eql("Some number fields are invalid"); done(); }
+      },
+      true
+    );
+  });
+
+  it('fail on incomplete context', function(done) {
+    var dg = new DdbGet([{a:"B", n: 123, hp: "1 - 10"}],
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { msg.should.eql("Event elements should either have all mech fields or no mech fields"); done(); }
       },
       true
     );
@@ -220,29 +229,29 @@ describe('DdbGet invalid event', function() {
 
   it('fail on incomplete context', function(done) {
     try {
-      var dg = new DdbGet([{a:"B", n: 123, hp: "1 - 10"}],
-        { fail:function(msg) { should.fail("Shouldnt get here"); }
+      var dg = new DdbGet([{a:"B", n: 123}],
+        { fail:function(msg) { should.fail("Shouldnt get here"+msg); }
         },
         true
       );
       should.fail("Shouldnt get here");
     } catch(ex) {
-      ex.should.eql("Missing succeed function");
+      ex.should.eql("Context should have succeed function");
       done();
     }
   });
 
   it('fail on context not a function', function(done) {
     try {
-      var dg = new DdbGet([{a:"B", n: 123, hp: "1 - 10"}],
+      var dg = new DdbGet([{a:"B", n: 123}],
         { fail:function(msg) { should.fail("Shouldnt get here"); },
-          succeed: function() { should.fail("Shouldnt get here"); }
+          succeed: "abc"
         },
         true
       );
       should.fail("Shouldnt get here");
     } catch(ex) {
-      ex.should.eql("succeed not a function");
+      ex.should.eql("Context succeed is not a function");
       done();
     }
   });
