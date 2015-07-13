@@ -5,10 +5,11 @@ var should = require('should');
 describe('DdbManager tests', function() {
 
   it('drop => not exists', function(done) {
-    DdbManager.drop("B/123",{
+    var dm = new DdbManager();
+    dm.drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
-        DdbManager.exists(
+        dm.exists(
           "B/123",
           { fail:function(err) { should.fail('Error: '+err);},
             succeed:function(res) {
@@ -21,19 +22,20 @@ describe('DdbManager tests', function() {
   });
 
   it('cycle: drop, not exists, get, exists', function(done) {
-    DdbManager.drop("B/123",{
+    var dm = new DdbManager();
+    dm.drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
-        DdbManager.exists(
+        dm.exists(
           "B/123",
           { fail:function(err) { should.fail('Error: '+err);},
             succeed:function(res) {
               res.should.eql(false);
-              DdbManager.get(
+              dm.get(
                 [{"a":"B","n":"123"}],
                 { fail: function(err) { should.fail('Error: '+err);},
                   succeed: function() {
-                    DdbManager.exists(
+                    dm.exists(
                       "B/123",
                       { fail:function(err) { should.fail('Error: '+err); },
                         succeed:function(res) { res.should.eql(true); done(); }

@@ -4,7 +4,7 @@ var DdbManager = require('app/DdbManager');
 var should = require('should');
 
 var testDdbGet = function(opts,expected,done) {
-  DdbGet.init(opts,
+  var dg = new DdbGet(opts,
     { succeed:function(data) {
         // check dataTs
         var todayD=new Date().toISOString().substr(0,10);
@@ -19,13 +19,13 @@ var testDdbGet = function(opts,expected,done) {
     },
     true
   );
-  DdbGet.get();
+  if(!dg.invalid) dg.get();
 };
 
 describe('DdbGet retrieval', function() {
 
   it('should get B/123 isf and pml = None', function(done) {
-    DdbManager.drop("B/123",{
+    new DdbManager().drop("B/123",{
       fail:should.fail,
       succeed:function() {
         testDdbGet(
@@ -50,7 +50,7 @@ describe('DdbGet retrieval', function() {
   });
 
   it('mechanique from web', function(done) {
-    DdbManager.drop("B/123",{
+    new DdbManager().drop("B/123",{
       fail:function(err) { should.fail('Error: '+err); done(); },
       succeed:function() {
         testDdbGet(
@@ -63,7 +63,7 @@ describe('DdbGet retrieval', function() {
   });
 
   it('mechanique from cache', function(done) {
-    DdbManager.drop("B/123",{
+    new DdbManager().drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         testDdbGet(
@@ -88,7 +88,7 @@ describe('DdbGet retrieval', function() {
 describe('DdbGet consistency', function() {
 
   it('mechanique from cache after late addition of mech info', function(done) {
-    DdbManager.drop("B/123",{
+    new DdbManager().drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         testDdbGet(
@@ -107,7 +107,7 @@ describe('DdbGet consistency', function() {
   });
 
   it('mechanique info dropped should not include mech result even if in cache', function(done) {
-    DdbManager.drop("B/123",{
+    new DdbManager().drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         testDdbGet(
@@ -133,7 +133,7 @@ describe('DdbGet speed', function() {
 
   it('should get B/123 faster after caching', function(done) {
 
-    DdbManager.drop("B/123",{
+    new DdbManager().drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         var start1 = new Date().getTime();
@@ -161,3 +161,90 @@ describe('DdbGet speed', function() {
 
 });
 
+
+describe('DdbGet invalid event', function() {
+
+  it('fail on non-array', function(done) {
+    var dg = new DdbGet({a:"B",n:"123"},
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { msg.should.eql("Event should be array"); done(); }
+      },
+      true
+    );
+  });
+
+  it('fail on empty array', function(done) {
+    var dg = new DdbGet([],
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { msg.should.eql("Event should not be empty"); done(); }
+      },
+      true
+    );
+  });
+
+  it('fail on missing area', function(done) {
+    var dg = new DdbGet([{n:"123"}],
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { msg.should.eql("Missing area"); done(); }
+      },
+      true
+    );
+  });
+ 
+  it('fail on missing number', function(done) {
+    var dg = new DdbGet([{a:"B"}],
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { msg.should.eql("Missing number"); done(); }
+      },
+      true
+    );
+  });
+
+  it('fail on invalid area', function(done) {
+    var dg = new DdbGet([{a:123, n: 123}],
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { msg.should.eql("Invalid area"); done(); }
+      },
+      true
+    );
+  });
+
+  it('fail on invalid number', function(done) {
+    var dg = new DdbGet([{a:"B", n: "dummy"}],
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { msg.should.eql("Invalid number"); done(); }
+      },
+      true
+    );
+  });
+
+  it('fail on incomplete context', function(done) {
+    try {
+      var dg = new DdbGet([{a:"B", n: 123, hp: "1 - 10"}],
+        { fail:function(msg) { should.fail("Shouldnt get here"); }
+        },
+        true
+      );
+      should.fail("Shouldnt get here");
+    } catch(ex) {
+      ex.should.eql("Missing succeed function");
+      done();
+    }
+  });
+
+  it('fail on context not a function', function(done) {
+    try {
+      var dg = new DdbGet([{a:"B", n: 123, hp: "1 - 10"}],
+        { fail:function(msg) { should.fail("Shouldnt get here"); },
+          succeed: function() { should.fail("Shouldnt get here"); }
+        },
+        true
+      );
+      should.fail("Shouldnt get here");
+    } catch(ex) {
+      ex.should.eql("succeed not a function");
+      done();
+    }
+  });
+
+}); 
