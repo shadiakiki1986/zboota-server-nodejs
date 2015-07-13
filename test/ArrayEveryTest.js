@@ -1,5 +1,5 @@
 'use strict';
-require('app/every');
+require('app/ArrayEvery');
 
 describe('every tests', function() {
 

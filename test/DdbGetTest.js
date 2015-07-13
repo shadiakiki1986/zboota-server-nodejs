@@ -164,14 +164,25 @@ describe('DdbGet speed', function() {
 
 describe('DdbGet invalid event', function() {
 
-  it('fail on non-array', function(done) {
+  it('fail on non-array not keyed by a+n', function(done) {
     var dg = new DdbGet({a:"B",n:"123"},
       { succeed:function(data) { should.fail("Shouldnt get here"); },
-        fail:function(msg) { msg.should.eql("Event should be array"); done(); }
+        fail:function(msg) { msg.should.eql("Event should be associative array keyed by area+number"); done(); }
       },
       true
     );
   });
+
+  it('pass on non-array keyed by a+n', function() {
+    var dg = new DdbGet({"B/123":{a:"B",n:"123"}},
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { should.fail("Shouldnt get here"); }
+      },
+      true
+    );
+    dg.invalid.should.eql(false);
+  });
+
 
   it('pass on empty array', function() {
     var dg = new DdbGet([],
