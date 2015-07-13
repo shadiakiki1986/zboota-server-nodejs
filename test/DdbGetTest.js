@@ -183,9 +183,18 @@ describe('DdbGet invalid event', function() {
     dg.invalid.should.eql(false);
   });
 
-
   it('pass on empty array', function() {
     var dg = new DdbGet([],
+      { succeed:function(data) { should.fail("Shouldnt get here"); },
+        fail:function(msg) { should.fail("Shouldnt get here"); }
+      },
+      true
+    );
+    dg.invalid.should.eql(false);
+  });
+
+  it('pass on empty non-array', function() {
+    var dg = new DdbGet({},
       { succeed:function(data) { should.fail("Shouldnt get here"); },
         fail:function(msg) { should.fail("Shouldnt get here"); }
       },
