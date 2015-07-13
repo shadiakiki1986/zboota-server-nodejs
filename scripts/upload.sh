@@ -55,7 +55,7 @@ upsertFunction() {
   fi
 }
 
-upsertFunction "zboota-get"   "DdbManager.getNotSilent" "Zboota: Gets zboota of user's cars"
+upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
 upsertFunction "zboota-login" "DdbUserWrapper.login" "Zboota: Login of user to get list of cars"
 upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Zboota: Emails password to user"
 upsertFunction "zboota-update" "DdbUserWrapper.update" "Zboota: updates list of cars of user"
