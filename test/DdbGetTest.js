@@ -173,13 +173,14 @@ describe('DdbGet invalid event', function() {
     );
   });
 
-  it('fail on empty array', function(done) {
+  it('pass on empty array', function() {
     var dg = new DdbGet([],
       { succeed:function(data) { should.fail("Shouldnt get here"); },
-        fail:function(msg) { msg.should.eql("Event should not be empty"); done(); }
+        fail:function(msg) { should.fail("Shouldnt get here"); }
       },
       true
     );
+    dg.invalid.should.eql(false);
   });
 
   it('fail on missing area', function(done) {

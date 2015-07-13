@@ -97,7 +97,7 @@ describe('DdbUserWrapper update', function() {
   it('fail invalid lpns 1', function(done) {
     DdbUserWrapper.update(
       { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[{\"bla\":\"bli\"}]" },
-      { fail:function(err) { err.should.eql("Invalid area/number pair"); done(); },
+      { fail:function(err) { err.should.eql("Event elements should all have n and a fields"); done(); },
         succeed: function(data) { should.fail('Shouldnt get here'); }
       }
     );
@@ -106,7 +106,7 @@ describe('DdbUserWrapper update', function() {
   it('fail invalid lpns 2', function(done) {
     DdbUserWrapper.update(
       { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[{\"a\":\"B\"}]" },
-      { fail:function(err) { err.should.eql("Invalid area/number pair"); done(); },
+      { fail:function(err) { err.should.eql("Event elements should all have n and a fields"); done(); },
         succeed: function(data) { should.fail('Shouldnt get here'); }
       }
     );
@@ -115,7 +115,7 @@ describe('DdbUserWrapper update', function() {
   it('fail invalid lpns 3', function(done) {
     DdbUserWrapper.update(
       { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[{\"a\":\"B\",\"n\":\"\"}]" },
-      { fail:function(err) { err.should.eql("Invalid area/number pair"); done(); },
+      { fail:function(err) { err.should.eql("Event elements should all have n and a fields"); done(); },
         succeed: function(data) { should.fail('Shouldnt get here'); }
       }
     );
@@ -143,7 +143,7 @@ describe('DdbUserWrapper update', function() {
 
   it('pass 2', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"{}" },
+      { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[]" },
       { fail:function(err) { should.fail('Error: '+err); },
         succeed: function(data) {
           data.should.eql({});
@@ -151,7 +151,7 @@ describe('DdbUserWrapper update', function() {
             { email:"shadiakiki1986@yahoo.com", pass:pass },
             { fail:function(err) { should.fail('Error: '+err); },
               succeed: function(data2) {
-                data2.should.eql('{}');
+                data2.should.eql('[]');
                 done();
               }
             }
