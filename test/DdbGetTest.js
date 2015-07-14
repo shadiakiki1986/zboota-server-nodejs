@@ -128,7 +128,6 @@ describe('DdbGet consistency', function() {
 }); // end describe
 
 
-
 describe('DdbGet speed', function() {
 
   it('should get B/123 faster after caching', function(done) {
@@ -179,9 +178,12 @@ describe('DdbGet speed', function() {
                   {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
                   function() {
                     var end3 = new Date().getTime();
+                    console.log("1",end1-start1,"2",end2-start2,"3",end3-start3);
                     (end1-start1).should.above(end2-start2);
                     (end3-start3).should.above(end2-start2);
                     (end2-start2).should.below(1000);
+                    (end1-start1).should.above(4000);
+                    (end3-start3).should.above(4000);
                     done();
                   },
                   true // force
@@ -312,6 +314,16 @@ describe('DdbGet invalid event', function() {
       ex.should.eql("Context succeed is not a function");
       done();
     }
+  });
+
+  it('fail on duplicates', function(done) {
+    var dg = new DdbGet([{a:"B", n: 123},{a:"B", n: 123}],
+      { fail:function(err) { err.should.equal("Event should not contain duplicates"); done(); },
+        succeed: function(msg) { should.fail("Shouldnt get here"); }
+      },
+      true
+    );
+    dg.invalid.should.eql(true);
   });
 
 }); 
