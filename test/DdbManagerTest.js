@@ -2,7 +2,7 @@
 var DdbManager = require('app/DdbManager');
 var should = require('should');
 
-describe('DdbManager tests', function() {
+describe('DdbManager drop', function() {
 
   it('drop => not exists', function(done) {
     var dm = new DdbManager();
@@ -44,6 +44,21 @@ describe('DdbManager tests', function() {
                 });
             }
           });
+      }
+    });
+  });
+}); // end describe
+
+describe('DdbManager list', function() {
+
+  it('listRegisteredserCars', function(done) {
+    var dm = new DdbManager();
+    dm.listRegisteredserCars("B/123",{
+      fail:function(err) { should.fail('Error: '+err);},
+      succeed:function(data) {
+console.log(data);
+        data.length.should.above(100);
+        done();
       }
     });
   });
