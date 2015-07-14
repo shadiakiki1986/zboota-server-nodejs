@@ -3,7 +3,7 @@ var DdbGet = require('app/DdbGet');
 var DdbManager = require('app/DdbManager');
 var should = require('should');
 
-var testDdbGet = function(opts,expected,done) {
+var testDdbGet = function(opts,expected,done,force) {
   var dg = new DdbGet(opts,
     { succeed:function(data) {
         // check dataTs
@@ -132,7 +132,6 @@ describe('DdbGet consistency', function() {
 describe('DdbGet speed', function() {
 
   it('should get B/123 faster after caching', function(done) {
-
     new DdbManager().drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
@@ -158,6 +157,44 @@ describe('DdbGet speed', function() {
     });
   });
 
+
+  it('should get B/123 fast after caching but slow with force=true', function(done) {
+    new DdbManager().drop("B/123",{
+      fail:function(err) { should.fail('Error: '+err);},
+      succeed:function() {
+        var start1 = new Date().getTime();
+        testDdbGet(
+          [{"a":"B","n":"123"}],
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          function() {
+            var end1 = new Date().getTime();
+            var start2 = new Date().getTime();
+            testDdbGet([{"a":"B","n":"123"}],
+              {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+              function() {
+                var end2 = new Date().getTime();
+                var start3 = new Date().getTime();
+                testDdbGet(
+                  [{"a":"B","n":"123"}],
+                  {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+                  function() {
+                    var end3 = new Date().getTime();
+                    (end1-start1).should.above(end2-start2);
+                    (end3-start3).should.above(end2-start2);
+                    (end2-start2).should.below(1000);
+                    done();
+                  },
+                  true // force
+                );
+              },
+              false // force
+            );
+          },
+          false // force
+        );
+      }
+    });
+  });
 
 });
 
