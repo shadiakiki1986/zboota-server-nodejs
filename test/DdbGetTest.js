@@ -3,26 +3,136 @@ var DdbGet = require('app/DdbGet');
 var DdbManager = require('app/DdbManager');
 var should = require('should');
 
-var testDdbGet = function(opts,expected,done,force) {
+var testDdbGet = function(opts,expected,done,isSync,outputTs,addedNow,dataNotNow) {
   var dg = new DdbGet(opts,
     { succeed:function(data) {
-        // check dataTs
-        var todayD=new Date().toISOString().substr(0,10);
-        for(var d in data) { data[d].dataTs.substr(0,10).should.eql(todayD); }
+        var nowTs = new Date().toISOString().replace(/T/," ").replace(/\..*/,"");
+        for(var d in data) {
+          // check dataTs
+          if(!dataNotNow) {
+            data[d].dataTs.should.eql(nowTs);
+          } else {
+            data[d].dataTs.should.below(nowTs);
+          }
 
-        // drop dataTs and check rest
-        for(var d in data) { delete data[d].dataTs; }
+          // drop dataTs and check rest
+          delete data[d].dataTs;
+
+          if(outputTs) {
+            data[d].hasOwnProperty("lastGetTs").should.eql(true);
+            data[d].hasOwnProperty("addedTs").should.eql(true);
+
+            data[d].lastGetTs.should.eql(nowTs);
+            if(!!addedNow) {
+              data[d].addedTs.should.eql(nowTs);
+            } else {
+              // added TS should be earlier than nowTs
+              data[d].addedTs.should.below(nowTs);
+            }
+
+            delete data[d].lastGetTs;
+            delete data[d].addedTs;
+          }
+
+        }
+
         data.should.eql(expected);
         done();
       },
       fail:should.fail
     },
-    true
+    true, // silent
+    isSync,
+    outputTs
   );
   if(!dg.invalid) dg.get();
 };
 
+var testGetFromWeb = function(data,x0,existed,expG,expM) {
+    var x = [x0];
+    var dg = new DdbGet(
+      x,
+      { succeed:should.fail,
+        fail:should.fail
+      },
+      true, // silent
+      false, // is sync
+      false // output ts
+    );
+    if(dg.invalid) should.fail("Shouldnt get here");
+    var o = dg.getFromWeb(data,x0,existed);
+    o.g.should.eql(expG);
+    o.m.should.eql(expM);
+};
+
+describe('DdbGet getFromWeb', function() {
+
+  it('no data in ddb + no mech', function() {
+    testGetFromWeb(null,{"a":"B","n":"123"},false,true,false);
+  });
+
+  it('no data in ddb + mech', function() {
+    var x0 = {"a":"B","n":"123","hp":"bla","t":"bla","y":"bla"};
+    testGetFromWeb(null,x0,false,true,true);
+  });
+
+  it('data in ddb wo mech with today ts + no mech', function() {
+    var todayD=new Date().toISOString().substr(0,10);
+    var x0 = {"a":"B","n":"123","dataTs":todayD};
+    testGetFromWeb({Item:x0},x0,true,false,false);
+  });
+
+  it('data in ddb wo mech with past ts + no mech', function() {
+    var x0 = {"a":"B","n":"123"};
+    var x1 = {"a":"B","n":"123","dataTs":"1900-01-01"};
+    testGetFromWeb({Item:x1},x0,true,true,false);
+  });
+
+  it('data in ddb w mech with today ts + no mech', function() {
+    var todayD=new Date().toISOString().substr(0,10);
+    var x0 = {"a":"B","n":"123"};
+    var x1 = {"a":"B","n":"123","dataTs":todayD,"hp":"bla","y":"bla","t":"bla"};
+    testGetFromWeb({Item:x1},x0,true,false,false);
+  });
+
+  it('data in ddb w mech with today ts + mech', function() {
+    var todayD=new Date().toISOString().substr(0,10);
+    var x0 = {"a":"B","n":"123","hp":"bla","y":"bla","t":"bla"};
+    var x1 = {"a":"B","n":"123","dataTs":todayD,"hp":"bla","y":"bla","t":"bla"};
+    testGetFromWeb({Item:x1},x0,true,false,true);
+  });
+
+  it('data in ddb wo mech with today ts + mech', function() {
+    var todayD=new Date().toISOString().substr(0,10);
+    var x0 = {"a":"B","n":"123","hp":"bla","y":"bla","t":"bla"};
+    var x1 = {"a":"B","n":"123","dataTs":todayD};
+    testGetFromWeb({Item:x1},x0,true,true,true);
+  });
+
+}); // end test getFromWeb
+
 describe('DdbGet retrieval', function() {
+
+  it('[] in => {} out', function(done) {
+    testDdbGet(
+      [],
+      {},
+      done
+    );
+  });
+
+  it('should get B/123 isf and pml = None', function(done) {
+    new DdbManager().drop("B/123",{
+      fail:should.fail,
+      succeed:function() {
+        testDdbGet(
+          [{"a":"B","n":"123"}],
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          done
+        );
+      }
+    });
+  });
 
   it('should get B/123 isf and pml = None', function(done) {
     new DdbManager().drop("B/123",{
@@ -178,7 +288,7 @@ describe('DdbGet speed', function() {
                   {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
                   function() {
                     var end3 = new Date().getTime();
-                    console.log("1",end1-start1,"2",end2-start2,"3",end3-start3);
+                    //console.log("1",end1-start1,"2",end2-start2,"3",end3-start3);
                     (end1-start1).should.above(end2-start2);
                     (end3-start3).should.above(end2-start2);
                     (end2-start2).should.below(1000);
@@ -326,4 +436,79 @@ describe('DdbGet invalid event', function() {
     dg.invalid.should.eql(true);
   });
 
-}); 
+});  // end describe
+
+describe.only('DdbGet outputTs', function() {
+
+  it('last get + added = now', function(done) {
+    new DdbManager().drop("B/123",{
+      fail:should.fail,
+      succeed:function() {
+        testDdbGet(
+          [{"a":"B","n":"123"}],
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          done,
+          false, // is sync
+          true, // outputTs
+          true // expect added now
+        );
+      }
+    });
+  });
+
+  it('last get = now, added = before, sync = true', function(done) {
+    new DdbManager().drop("B/123",{
+      fail:should.fail,
+      succeed:function() {
+        testDdbGet(
+          [{"a":"B","n":"123"}],
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          function() {
+            testDdbGet(
+              [{"a":"B","n":"123"}],
+              {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+              done,
+              true, // is sync
+              true, // outputTs
+              false // expect added now
+            );
+          },
+          false, // is sync
+          true, // outputTs
+          true // expect added now
+        );
+      }
+    });
+  });
+
+  it('last get = now, added = before, sync = false', function(done) {
+    new DdbManager().drop("B/123",{
+      fail:should.fail,
+      succeed:function() {
+        testDdbGet(
+          [{"a":"B","n":"123"}],
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          function() {
+            setTimeout(function() {
+              testDdbGet(
+                [{"a":"B","n":"123"}],
+                {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+                done,
+                false, // is sync
+                true, // outputTs
+                false, // expect added now
+                false  // expect data  now
+              );
+            },
+            3000); // wait 3 seconds before next check
+          },
+          false, // is sync
+          true, // outputTs
+          true // expect added now
+        );
+      }
+    });
+  });
+
+
+});
