@@ -3,27 +3,34 @@ var DdbGet = require('app/DdbGet');
 var DdbManager = require('app/DdbManager');
 var should = require('should');
 
-var testDdbGet = function(opts,expected,done,isSync,outputTs,addedNow,dataNotNow) {
+var testDdbGet = function(opts,expected,done,isSync,outputTs) {
   var dg = new DdbGet(opts,
     { succeed:function(data) {
         var nowTs = new Date().toISOString().replace(/T/," ").replace(/\..*/,"");
         for(var d in data) {
-          // check dataTs
-          if(!dataNotNow) {
-            data[d].dataTs.should.eql(nowTs);
-          } else {
-            data[d].dataTs.should.below(nowTs);
-          }
 
-          // drop dataTs and check rest
-          delete data[d].dataTs;
-
-          if(outputTs) {
+          if(!!outputTs) {
+            // check dataTs
+            if(!outputTs.dataNotNow) {
+              data[d].dataTs.should.eql(nowTs);
+            } else {
+              data[d].dataTs.should.below(nowTs);
+            }
+  
             data[d].hasOwnProperty("lastGetTs").should.eql(true);
             data[d].hasOwnProperty("addedTs").should.eql(true);
 
-            data[d].lastGetTs.should.eql(nowTs);
-            if(!!addedNow) {
+            if(isSync) {
+              if(outputTs.addedNow) {
+                data[d].lastGetTs.should.eql(nowTs);
+              } else {
+                data[d].lastGetTs.should.below(nowTs);
+              }
+            } else {
+              data[d].lastGetTs.should.eql(nowTs);
+            }
+
+            if(!!outputTs.addedNow) {
               data[d].addedTs.should.eql(nowTs);
             } else {
               // added TS should be earlier than nowTs
@@ -34,6 +41,8 @@ var testDdbGet = function(opts,expected,done,isSync,outputTs,addedNow,dataNotNow
             delete data[d].addedTs;
           }
 
+          // drop dataTs and check rest
+          delete data[d].dataTs;
         }
 
         data.should.eql(expected);
@@ -438,7 +447,7 @@ describe('DdbGet invalid event', function() {
 
 });  // end describe
 
-describe.only('DdbGet outputTs', function() {
+describe('DdbGet outputTs', function() {
 
   it('last get + added = now', function(done) {
     new DdbManager().drop("B/123",{
@@ -449,8 +458,7 @@ describe.only('DdbGet outputTs', function() {
           {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
           done,
           false, // is sync
-          true, // outputTs
-          true // expect added now
+          {addedNow:true,dataNotNow:false} // expected timestamps
         );
       }
     });
@@ -469,13 +477,11 @@ describe.only('DdbGet outputTs', function() {
               {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
               done,
               true, // is sync
-              true, // outputTs
-              false // expect added now
+              {addedNow:false,dataNotNow:false} // expected timestamps
             );
           },
           false, // is sync
-          true, // outputTs
-          true // expect added now
+          {addedNow:true,dataNotNow:false} // expected timestamps
         );
       }
     });
@@ -495,16 +501,13 @@ describe.only('DdbGet outputTs', function() {
                 {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
                 done,
                 false, // is sync
-                true, // outputTs
-                false, // expect added now
-                false  // expect data  now
+                {addedNow:false,dataNotNow:true} // expected timestamps
               );
             },
             3000); // wait 3 seconds before next check
           },
           false, // is sync
-          true, // outputTs
-          true // expect added now
+          {addedNow:true,dataNotNow:false} // expected timestamps
         );
       }
     });
@@ -512,3 +515,4 @@ describe.only('DdbGet outputTs', function() {
 
 
 });
+

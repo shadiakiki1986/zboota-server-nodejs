@@ -89,6 +89,38 @@ describe('DdbManager tests', function() {
 
 }); // end describe
 
+
+describe('DdbManager data checks', function() {
+
+  it('no duplicates', function(done) {
+    var dm = new DdbManager();
+        dm.listCars({
+          fail:function(err) { should.fail('Error: '+err);},
+          succeed:function(cars) {
+            var carIds=cars.map(function(x) { return x.a+"/"+x.n; });
+            carIds.length.should.eql(carIds.unique().length);
+            done();
+          }
+        });
+  });
+
+  it('wierd ids', function(done) {
+    var dm = new DdbManager();
+        dm.listCars({
+          fail:function(err) { should.fail('Error: '+err);},
+          succeed:function(cars) {
+            cars=cars.filter(function(x) { return x.a+"/"+x.n!=x.id; });
+            cars.length.should.eql(0);
+            done();
+          }
+        });
+  });
+
+});
+
+/*
+// This test will be too slow to run
+// Need to think of another way
 describe('DdbManager sync', function() {
 
   it('sync', function(done) {
@@ -104,8 +136,9 @@ describe('DdbManager sync', function() {
               succeed:function(userCars) {
                 var userCarIds=userCars.map(function(x) { return x.a+"/"+x.n; });
                 cars=cars.filter(function(x) { return userCarIds.indexOf(x.a+"/"+x.n)!=-1; });
-                var minDate = cars.map(function(x) { return x.dataTs.substring(0,10); })
-                  .reduce(function(a,b) { if(a<b) return a; else return b; },"9999-99-99");
+                var minDate = cars.map(function(x) {
+                  return x.dataTs.substring(0,10);
+                }).reduce(function(a,b) { if(a<b) return a; else return b; },"9999-99-99");
                 var todayD=new Date().toISOString().substr(0,10);
                 minDate.should.eql(todayD);
                 done();
@@ -118,4 +151,4 @@ describe('DdbManager sync', function() {
   });
 
 });
-
+*/
