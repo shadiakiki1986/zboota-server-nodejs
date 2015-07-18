@@ -76,7 +76,7 @@ describe('DdbManager tests', function() {
         dm.listUserCars({
           fail:function(err) { should.fail('Error: '+err);},
           succeed:function(dataCars) {
-            dataCars.length.should.above(1); // 100 on us-west-2
+            dataCars.length.should.above(0); // 100 on us-west-2, 0 on us-east-1
             dataCars.length.should.above(dataUsers.length);
             done();
           }
@@ -118,11 +118,11 @@ describe('DdbManager data checks', function() {
 
 });
 
+describe('DdbManager sync', function() {
+
 /*
 // This test will be too slow to run
 // Need to think of another way
-describe('DdbManager sync', function() {
-
   it('sync', function(done) {
     var dm = new DdbManager();
     dm.syncDdbWeb({
@@ -149,6 +149,30 @@ describe('DdbManager sync', function() {
       }
     });
   });
+*/
+
+/*
+  it('min date', function(done) {
+    var dm = new DdbManager();
+    dm.listCars({
+      fail:function(err) { should.fail('Error: '+err);},
+      succeed:function(cars) {
+        dm.listUserCars({
+          fail:function(err) { should.fail('Error: '+err);},
+          succeed:function(userCars) {
+            var userCarIds=userCars.map(function(x) { return x.a+"/"+x.n; });
+            cars=cars.filter(function(x) { return userCarIds.indexOf(x.a+"/"+x.n)!=-1; });
+            var minDate = cars.map(function(x) {
+              return x.dataTs.substring(0,10);
+            }).reduce(function(a,b) { if(a<b) return a; else return b; },"9999-99-99");
+            var todayD=new Date().toISOString().substr(0,10);
+            minDate.should.eql(todayD);
+            done();
+          }
+        });
+      }
+    });
+  });
+*/
 
 });
-*/
