@@ -54,7 +54,7 @@ describe('DdbManager tests', function() {
       }
     });
   });
-
+/*
   it('list Cars', function(done) {
     var dm = new DdbManager();
     dm.listCars({
@@ -86,6 +86,7 @@ describe('DdbManager tests', function() {
     });
 
   });
+*/
 
 }); // end describe
 
@@ -120,7 +121,7 @@ describe('DdbManager data checks', function() {
 
 /*
 // Check https://github.com/shadiakiki1986/zboota-server-nodejs/issues/2
-describe.only('DdbManager sync', function() {
+describe('DdbManager sync', function() {
 
   it('sync', function(done) {
     var dm = new DdbManager();
@@ -170,6 +171,7 @@ describe.only('DdbManager sync', function() {
       }
     });
   });
-*/
 
 });
+*/
+
