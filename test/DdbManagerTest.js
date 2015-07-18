@@ -60,7 +60,7 @@ describe('DdbManager tests', function() {
     dm.listCars({
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function(data) {
-        data.length.should.above(500);
+        data.length.should.above(1); // 500 on us-west-2, 3 on us-east-1
         done();
       }
     });
@@ -72,11 +72,11 @@ describe('DdbManager tests', function() {
     dm.listUsers({
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function(dataUsers) {
-        dataUsers.length.should.above(100);
+        dataUsers.length.should.above(1); // 100 on us-west-2, 22 on us-east-1
         dm.listUserCars({
           fail:function(err) { should.fail('Error: '+err);},
           succeed:function(dataCars) {
-            dataCars.length.should.above(100);
+            dataCars.length.should.above(1); // 100 on us-west-2
             dataCars.length.should.above(dataUsers.length);
             done();
           }
