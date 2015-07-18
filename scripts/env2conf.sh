@@ -16,5 +16,6 @@ echo "\"MAILGUN_DOMAIN\":\"$MAILGUN_DOMAIN\","
 echo "\"MAILGUN_FROM\":\"$MAILGUN_FROM\","
 echo "\"MAILGUN_PUBLIC_KEY\":\"$MAILGUN_PUBLIC_KEY\","
 echo "\"ZBOOTA_SERVER_AWS_REGION\":\"us-east-1\"" #us-east-1 is only for travis-ci. Use us-west-2 in the production config.json file
+echo "\"MAX_PASS_FAIL\": 5"
 echo "}"
 
