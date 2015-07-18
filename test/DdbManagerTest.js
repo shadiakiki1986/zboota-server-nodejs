@@ -118,11 +118,10 @@ describe('DdbManager data checks', function() {
 
 });
 
-describe('DdbManager sync', function() {
-
 /*
-// This test will be too slow to run
-// Need to think of another way
+// Check https://github.com/shadiakiki1986/zboota-server-nodejs/issues/2
+describe.only('DdbManager sync', function() {
+
   it('sync', function(done) {
     var dm = new DdbManager();
     dm.syncDdbWeb({
@@ -149,9 +148,7 @@ describe('DdbManager sync', function() {
       }
     });
   });
-*/
 
-/*
   it('min date', function(done) {
     var dm = new DdbManager();
     dm.listCars({
