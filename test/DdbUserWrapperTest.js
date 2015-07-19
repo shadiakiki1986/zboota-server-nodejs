@@ -39,18 +39,18 @@ describe('DdbUserWrapper login', function() {
     );
   });
 
-  it('reset', function(done) { testReset(done); });
-
   it('succeed', function(done) {
-    DdbUserWrapper.login(
-      { email:"shadiakiki1986@yahoo.com", pass:pass },
-      { fail:function(err) { should.fail('Error: '+err);},
-        succeed: function(data) {
-          data.should.eql("[]");
-          done();
+    testReset(function() {
+      DdbUserWrapper.login(
+        { email:"shadiakiki1986@yahoo.com", pass:pass },
+        { fail:function(err) { should.fail('Error: '+err);},
+          succeed: function(data) {
+            data.should.eql("[]");
+            done();
+          }
         }
-      }
-    );
+      );
+    });
   });
 
   it('forgot password', function(done) {

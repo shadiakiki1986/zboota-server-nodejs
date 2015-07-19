@@ -60,7 +60,7 @@ upsertFunction "zboota-login" "DdbUserWrapper.login" "Zboota: Login of user to g
 upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Zboota: Emails password to user"
 upsertFunction "zboota-update" "DdbUserWrapper.update" "Zboota: updates list of cars of user"
 upsertFunction "zboota-newUser" "DdbUserWrapper.newUser" "Zboota: creates new user from email"
-upsertFunction "zboota-sync"   "DdbManagerWrapper.sync" "Zboota: Sync registered user data"
+# upsertFunction "zboota-sync"   "DdbManagerWrapper.sync" "Zboota: Sync registered user data"
 upsertFunction "zboota-regMinDate"   "DdbManagerWrapper.registeredUsersDataMinDate" "Zboota: Registered user data min date"
 
 rm zboota-server-nodejs.zip
