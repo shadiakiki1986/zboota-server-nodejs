@@ -151,28 +151,16 @@ describe('DdbManager sync', function() {
   });
 */
 
-/*
   it('min date', function(done) {
     var dm = new DdbManager();
-    dm.listCars({
+    dm.registeredUsersDataMinDate({
       fail:function(err) { should.fail('Error: '+err);},
-      succeed:function(cars) {
-        dm.listUserCars({
-          fail:function(err) { should.fail('Error: '+err);},
-          succeed:function(userCars) {
-            var userCarIds=userCars.map(function(x) { return x.a+"/"+x.n; });
-            cars=cars.filter(function(x) { return userCarIds.indexOf(x.a+"/"+x.n)!=-1; });
-            var minDate = cars.map(function(x) {
-              return x.dataTs.substring(0,10);
-            }).reduce(function(a,b) { if(a<b) return a; else return b; },"9999-99-99");
+      succeed:function(minDate) {
             var todayD=new Date().toISOString().substr(0,10);
             minDate.should.eql(todayD);
             done();
-          }
-        });
       }
     });
   });
-*/
 
 });
