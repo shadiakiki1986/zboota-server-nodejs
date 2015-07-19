@@ -155,20 +155,22 @@ describe('DdbManager sync', function() {
   it('min date', function(done) {
     // only run this test if we're on us-west-2
     // This wouldn't run on travis fore example
-    if(config.ZBOOTA_SERVER_AWS_REGION=="us-west-2") {
-      var dm = new DdbManager();
-      dm.registeredUsersDataMinDate({
-        fail:function(err) { should.fail('Error: '+err);},
-        succeed:function(minDate) {
-              var todayD=new Date().toISOString().substr(0,10);
-              var yesterdayD=new Date();
-              yesterdayD.setDate(yesterdayD.getDate()-1);
-              yesterdayD=yesterdayD.toISOString().substr(0,10);
-              (minDate==todayD || minDate==yesterdayD).should.eql(true); // couldn't figure out how to use any from the should npm package
-              done();
-        }
-      });
-    }
+    if(config.ZBOOTA_SERVER_AWS_REGION!="us-west-2") {
+      done();
+      return;
+   }
+    var dm = new DdbManager();
+    dm.registeredUsersDataMinDate({
+      fail:function(err) { should.fail('Error: '+err);},
+      succeed:function(minDate) {
+            var todayD=new Date().toISOString().substr(0,10);
+            var yesterdayD=new Date();
+            yesterdayD.setDate(yesterdayD.getDate()-1);
+            yesterdayD=yesterdayD.toISOString().substr(0,10);
+            (minDate==todayD || minDate==yesterdayD).should.eql(true); // couldn't figure out how to use any from the should npm package
+            done();
+      }
+    });
   });
 
 });
