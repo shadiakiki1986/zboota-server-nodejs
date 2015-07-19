@@ -119,10 +119,10 @@ describe('DdbManager data checks', function() {
 
 });
 
-/*
-// Check https://github.com/shadiakiki1986/zboota-server-nodejs/issues/2
 describe('DdbManager sync', function() {
 
+/*
+// Check https://github.com/shadiakiki1986/zboota-server-nodejs/issues/2
   it('sync', function(done) {
     var dm = new DdbManager();
     dm.syncDdbWeb({
@@ -149,6 +149,7 @@ describe('DdbManager sync', function() {
       }
     });
   });
+*/
 
   it('min date', function(done) {
     var dm = new DdbManager();
@@ -156,12 +157,13 @@ describe('DdbManager sync', function() {
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function(minDate) {
             var todayD=new Date().toISOString().substr(0,10);
-            minDate.should.eql(todayD);
+            var yesterdayD=new Date();
+            yesterdayD.setDate(yesterdayD.getDate()-1);
+            yesterdayD=yesterdayD.toISOString().substr(0,10);
+            (minDate==todayD || minDate==yesterdayD).should.eql(true); // couldn't figure out how to use any from the should npm package
             done();
       }
     });
   });
 
 });
-*/
-
