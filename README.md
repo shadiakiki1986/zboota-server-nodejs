@@ -18,6 +18,7 @@ aws configure
  * Note on AWS credentials: for travis-ci, AWS credentials in the nodejs code are gotten from the encrypted environmental variables in the .travis.yml file
   * check http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html#Credentials_from_Environment_Variables
 
+* `sudo apt-get install libcurl4-gnutls-dev`
 * Install this package''s requirements
 ```
 npm install

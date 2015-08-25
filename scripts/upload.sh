@@ -74,7 +74,8 @@ upsertFunction() {
 ## upsertFunction "zboota-sync"   "DdbManagerWrapper.sync" "Zboota: Sync registered user data"
 #upsertFunction "zboota-regMinDate"   "DdbManagerWrapper.registeredUsersDataMinDate" "Zboota: Registered user data min date"
 #upsertFunction "zboota-testUserPassword"   "DdbManagerWrapper.testUserPassword" "Zboota: Test user's password"
-upsertFunction "zboota-statistics"   "StatisticsWrapper.get" "Zboota: Get statistics"
+#upsertFunction "zboota-statistics"   "StatisticsWrapper.get" "Zboota: Get statistics"
+upsertFunction "zboota-webavailability"   "WebAvailabilityWrapper.get" "Zboota: Web availability"
 
 # Cleaning up
 rm zboota-server-nodejs.zip
