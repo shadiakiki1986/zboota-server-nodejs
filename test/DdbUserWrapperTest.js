@@ -225,3 +225,21 @@ describe('DdbUserWrapper new user (almost same as tests in DdbUser new user)', f
 
 });
 
+
+
+describe('DdbUserWrapper test user password', function() {
+
+  it('get', function(done) {
+    DdbUserWrapper.testUserPassword(
+      {},
+      { fail:function(err) { should.fail('Shouldnt get here'); },
+        succeed: function(data) {
+          data.length.should.equal(5);
+          done();
+        }
+      }
+    );
+  });
+
+});
+

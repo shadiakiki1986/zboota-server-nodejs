@@ -26,7 +26,10 @@ zip -q -r zboota-server-nodejs.zip *
 ##  --debug 
 ##  --profile adminuser \
 
+echo "Copying to s3"
 aws s3 cp zboota-server-nodejs.zip s3://zboota-server/lambda-zip/zboota-server-nodejs.zip
+
+echo "Upserting"
 upsertFunction() {
   aws lambda list-functions | grep "\"FunctionName\": \"$1\"" > /dev/null
   if [ $? == 0 ]; then
@@ -55,13 +58,16 @@ upsertFunction() {
   fi
 }
 
-upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
-upsertFunction "zboota-login" "DdbUserWrapper.login" "Zboota: Login of user to get list of cars"
-upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Zboota: Emails password to user"
-upsertFunction "zboota-update" "DdbUserWrapper.update" "Zboota: updates list of cars of user"
-upsertFunction "zboota-newUser" "DdbUserWrapper.newUser" "Zboota: creates new user from email"
-# upsertFunction "zboota-sync"   "DdbManagerWrapper.sync" "Zboota: Sync registered user data"
-upsertFunction "zboota-regMinDate"   "DdbManagerWrapper.registeredUsersDataMinDate" "Zboota: Registered user data min date"
+#upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
+#upsertFunction "zboota-login" "DdbUserWrapper.login" "Zboota: Login of user to get list of cars"
+#upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Zboota: Emails password to user"
+#upsertFunction "zboota-update" "DdbUserWrapper.update" "Zboota: updates list of cars of user"
+#upsertFunction "zboota-newUser" "DdbUserWrapper.newUser" "Zboota: creates new user from email"
+## upsertFunction "zboota-sync"   "DdbManagerWrapper.sync" "Zboota: Sync registered user data"
+#upsertFunction "zboota-regMinDate"   "DdbManagerWrapper.registeredUsersDataMinDate" "Zboota: Registered user data min date"
+#upsertFunction "zboota-testUserPassword"   "DdbManagerWrapper.testUserPassword" "Zboota: Test user's password"
+upsertFunction "zboota-statistics"   "StatisticsWrapper.get" "Zboota: Get statistics"
 
+# Cleaning up
 rm zboota-server-nodejs.zip
 aws s3 rm s3://zboota-server/lambda-zip/zboota-server-nodejs.zip

@@ -32,7 +32,7 @@ npm test
 ```
 Running on http://travis-ci.org
 * [![Build Status](https://secure.travis-ci.org/shadiakiki1986/zboota-server-nodejs.png)](http://travis-ci.org/shadiakiki1986/zboota-server-nodejs)
-* Special note for .travis.yml file: `travis encrypt 'MAILGUN_KEY=blabla'`
+* Special note for .travis.yml file: `travis encrypt 'MAILGUN\_KEY=blabla'`
 
 # Upload to AWS
 * lambda functions: `bash scripts/upload.sh`
