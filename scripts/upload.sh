@@ -1,10 +1,18 @@
 #!/bin/bash
 # http://blog.iron.io/2015/01/aws-lambda-vs-ironworker.html
 # Usage: from root directory: bash scripts/upload.sh
+#
+# Note: Make sure that the upsert function calls at the end of the file are not commented out
 
 if [ ! -d scripts ]; then
   echo "Please use this script from the root folder"
   echo "Usage bash scripts/upload.sh"
+  echo "Note: Make sure that the upsert function calls at the end of the file are not commented out"
+  exit
+fi
+
+if [ "`aws --version 2>&1 |awk -F" " '{print $1}'`" != "aws-cli/1.7.46" ]; then
+  echo "Only aws version 1.7.46 supported"
   exit
 fi
 
@@ -31,7 +39,7 @@ aws s3 cp zboota-server-nodejs.zip s3://zboota-server/lambda-zip/zboota-server-n
 
 echo "Upserting"
 upsertFunction() {
-  aws lambda list-functions | grep "\"FunctionName\": \"$1\"" > /dev/null
+  aws lambda list-functions | grep "function:$1" > /dev/null
   if [ $? == 0 ]; then
     echo "Updating function $1"
     aws lambda update-function-code \
