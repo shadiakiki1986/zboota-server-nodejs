@@ -162,7 +162,7 @@ describe('DdbGet retrieval', function() {
             {a:"B",n:"134431"}
           ],
           { "B/123":{"a":"B","n":"123","isf":"None","pml":"None"},
-            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"None"}
+            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"10,000  LBP"}
           },
           done
         );
@@ -264,8 +264,8 @@ describe('DdbGet speed', function() {
               {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
               function() {
                 var end2 = new Date().getTime();
+                (end2-start2).should.below(1000); // test first that we're on a good connection
                 (end1-start1).should.above(end2-start2);
-                (end2-start2).should.below(1000);
                 done();
               }
             );
