@@ -11,8 +11,10 @@ if [ ! -d scripts ]; then
   exit
 fi
 
-if [ "`aws --version 2>&1 |awk -F" " '{print $1}'`" != "aws-cli/1.7.46" ]; then
-  echo "Only aws version 1.7.46 supported"
+# bash string alphabetical order comparison:
+# http://stackoverflow.com/a/32006346/4126114
+if [ "`aws --version 2>&1 |awk -F" " '{print $1}'|awk -F\/ '{print $2}'`" \< "1.7.46" ]; then
+  echo "Min aws version required 1.7.46"
   exit
 fi
 
@@ -66,7 +68,7 @@ upsertFunction() {
   fi
 }
 
-#upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
+upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
 #upsertFunction "zboota-login" "DdbUserWrapper.login" "Zboota: Login of user to get list of cars"
 #upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Zboota: Emails password to user"
 #upsertFunction "zboota-update" "DdbUserWrapper.update" "Zboota: updates list of cars of user"
@@ -75,7 +77,7 @@ upsertFunction() {
 #upsertFunction "zboota-regMinDate"   "DdbManagerWrapper.registeredUsersDataMinDate" "Zboota: Registered user data min date"
 #upsertFunction "zboota-testUserPassword"   "DdbManagerWrapper.testUserPassword" "Zboota: Test user's password"
 #upsertFunction "zboota-statistics"   "StatisticsWrapper.get" "Zboota: Get statistics"
-upsertFunction "zboota-webavailability"   "WebAvailabilityWrapper.get" "Zboota: Web availability"
+#upsertFunction "zboota-webavailability"   "WebAvailabilityWrapper.get" "Zboota: Web availability"
 
 # Cleaning up
 rm zboota-server-nodejs.zip
