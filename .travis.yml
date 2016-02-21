@@ -1,7 +1,7 @@
 language: node_js
 node_js: node
 before_script:
-- bash scripts/env2conf.sh && bash scripts/env2conf.sh > node_modules/app/config.json
+- bash scripts/env2conf.sh > node_modules/app/config.json
 script: npm test
 env:
   global:
