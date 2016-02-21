@@ -45,3 +45,8 @@ Running on http://travis-ci.org
 tf=`tempfile` && echo "new message" > $tf && aws s3 cp $tf s3://zboota-server/headerMessage/headerMessage.txt --acl public-read && rm $tf
 ```
  * To update to an empty message, just replace `"new message"` with `""`
+
+# Usefule snippets
+
+    aws lambda list-functions
+
