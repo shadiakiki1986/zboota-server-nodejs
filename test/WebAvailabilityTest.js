@@ -2,7 +2,7 @@
 var WebAvailability = require('app/WebAvailability');
 var should = require('should');
 
-describe.only('WebAvailability main', function() {
+describe('WebAvailability main', function() {
 
   it('ping', function(done) {
     var wa = new WebAvailability({
