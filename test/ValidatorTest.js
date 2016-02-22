@@ -1,6 +1,8 @@
 'use strict';
 var Validator = require('app/Validator');
 var should = require('should');
+var xpath = require('xpath')
+  , dom = require('xmldom').DOMParser
 
 describe('Validator tests', function() {
 
@@ -25,6 +27,16 @@ describe('Validator tests', function() {
 	    Object.keys(Validator.mapPml()).length.should.above(3);
 	    Validator.mapPml()["B"].should.not.eql("B");
 	});
+
+	it('validDawlatiMechanique', function() {
+      var xml = "<book><title value='1'>Harry Potter</title><title value='2'>ba2ra</title></book>"
+      var doc = new dom().parseFromString(xml)
+      var nodes = xpath.select("//title", doc)
+      Validator.validDawlatiMechanique(nodes,"bla").isvalid.should.eql(false);
+      Validator.validDawlatiMechanique(nodes,"1").isvalid.should.eql(true);
+      Validator.validDawlatiMechanique(nodes,"1").list.length.should.eql(2);
+	});
+
 
 });
 
