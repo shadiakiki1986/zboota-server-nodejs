@@ -138,7 +138,7 @@ describe('DdbUser login', function() {
 
 describe('DdbUser new', function() {
 
-  it('invalid', function(done) {
+  it('invalid email', function(done) {
 	var du = new DdbUser(
 	  { email:"shadiakiki1986" },
 	  { fail:function(err) {
