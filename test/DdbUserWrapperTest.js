@@ -2,13 +2,14 @@
 var DdbUserWrapper = require('app/DdbUserWrapper');
 var DdbUser = require('app/DdbUser');
 var should = require('should');
+var config = require('app/config.json');
 
 var pass="dummy";
 
 function testReset(done) {
 	// drop passFail flag so as not to interfere with demo usage
 	var du=new DdbUser(
-	  { email:"shadiakiki1986@yahoo.com", pass:"dummy" },
+	  { email:config.TEST_USER, pass:"dummy" },
 	  { fail:function(err) { should.fail('Error: '+err); },
 	    succeed: function() { ; } // unneeded
 	  },
@@ -27,7 +28,7 @@ describe('DdbUserWrapper login', function() {
 
   it('fail', function(done) {
     DdbUserWrapper.login(
-      { email:"shadiakiki1986@yahoo.com", pass:"dummy" },
+      { email:config.TEST_USER, pass:"dummy" },
       { fail:function(err) {
           err.should.eql("Wrong password.");
           done();
@@ -42,7 +43,7 @@ describe('DdbUserWrapper login', function() {
   it('succeed', function(done) {
     testReset(function() {
       DdbUserWrapper.login(
-        { email:"shadiakiki1986@yahoo.com", pass:pass },
+        { email:config.TEST_USER, pass:pass },
         { fail:function(err) { should.fail('Error: '+err);},
           succeed: function(data) {
             data.should.eql("[]");
@@ -55,7 +56,7 @@ describe('DdbUserWrapper login', function() {
 
   it('forgot password', function(done) {
     DdbUserWrapper.forgotPassword(
-      { email:"shadiakiki1986@yahoo.com", pass:"dummy" },
+      { email:config.TEST_USER, pass:"dummy" },
       { fail:function(err) { should.fail('Error: '+err);},
         succeed: function(data) {
           data.should.eql("{}");
@@ -71,7 +72,7 @@ describe('DdbUserWrapper update', function() {
 
   it('fail password', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:"dummy", lpns:"[{\"a\":\"B\",\"n\":123}]" },
+      { email:config.TEST_USER, pass:"dummy", lpns:"[{\"a\":\"B\",\"n\":123}]" },
       { fail:function(err) {
           err.should.eql("Wrong password.");
           done();
@@ -87,7 +88,7 @@ describe('DdbUserWrapper update', function() {
 
   it('fail missing lpns', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:pass },
+      { email:config.TEST_USER, pass:pass },
       { fail:function(err) { err.should.eql("Missing email or pass or lpns"); done(); },
         succeed: function(data) { should.fail('Shouldnt get here'); }
       }
@@ -96,7 +97,7 @@ describe('DdbUserWrapper update', function() {
 
   it('fail invalid lpns 1', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[{\"bla\":\"bli\"}]" },
+      { email:config.TEST_USER, pass:pass, lpns:"[{\"bla\":\"bli\"}]" },
       { fail:function(err) { err.should.eql("Event elements should all have n and a fields"); done(); },
         succeed: function(data) { should.fail('Shouldnt get here'); }
       }
@@ -105,7 +106,7 @@ describe('DdbUserWrapper update', function() {
 
   it('fail invalid lpns 2', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[{\"a\":\"B\"}]" },
+      { email:config.TEST_USER, pass:pass, lpns:"[{\"a\":\"B\"}]" },
       { fail:function(err) { err.should.eql("Event elements should all have n and a fields"); done(); },
         succeed: function(data) { should.fail('Shouldnt get here'); }
       }
@@ -114,7 +115,7 @@ describe('DdbUserWrapper update', function() {
 
   it('fail invalid lpns 3', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[{\"a\":\"B\",\"n\":\"\"}]" },
+      { email:config.TEST_USER, pass:pass, lpns:"[{\"a\":\"B\",\"n\":\"\"}]" },
       { fail:function(err) { err.should.eql("Event elements should all have n and a fields"); done(); },
         succeed: function(data) { should.fail('Shouldnt get here'); }
       }
@@ -123,12 +124,12 @@ describe('DdbUserWrapper update', function() {
 
   it('pass 1', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[{\"a\":\"B\",\"n\":\"123\"}]" },
+      { email:config.TEST_USER, pass:pass, lpns:"[{\"a\":\"B\",\"n\":\"123\"}]" },
       { fail:function(err) { should.fail('Error: '+err); },
         succeed: function(data) {
           data.should.eql({});
           DdbUserWrapper.login(
-            { email:"shadiakiki1986@yahoo.com", pass:pass },
+            { email:config.TEST_USER, pass:pass },
             { fail:function(err) { should.fail('Error: '+err); },
               succeed: function(data2) {
                 data2.should.eql('[{"a":"B","n":"123"}]');
@@ -143,12 +144,12 @@ describe('DdbUserWrapper update', function() {
 
   it('pass 2', function(done) {
     DdbUserWrapper.update(
-      { email:"shadiakiki1986@yahoo.com", pass:pass, lpns:"[]" },
+      { email:config.TEST_USER, pass:pass, lpns:"[]" },
       { fail:function(err) { should.fail('Error: '+err); },
         succeed: function(data) {
           data.should.eql({});
           DdbUserWrapper.login(
-            { email:"shadiakiki1986@yahoo.com", pass:pass },
+            { email:config.TEST_USER, pass:pass },
             { fail:function(err) { should.fail('Error: '+err); },
               succeed: function(data2) {
                 data2.should.eql('[]');
@@ -194,7 +195,7 @@ describe('DdbUserWrapper new user (almost same as tests in DdbUser new user)', f
 
   it('already registered', function(done) {
     DdbUserWrapper.newUser(
-      { email:"shadiakiki1986@yahoo.com" },
+      { email:config.TEST_USER },
       { fail:function(err) { err.should.eql('Email address already registered.'); done(); },
         succeed: function(data) { should.fail("Shouldnt get here"); }
       }
@@ -229,7 +230,7 @@ describe('DdbUserWrapper new user (almost same as tests in DdbUser new user)', f
 
 describe('DdbUserWrapper test user password', function() {
 
-  it('get', function(done) {
+  it('get user password', function(done) {
     DdbUserWrapper.testUserPassword(
       {},
       { fail:function(err) { should.fail('Shouldnt get here'); },
