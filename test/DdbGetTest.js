@@ -143,26 +143,13 @@ describe('DdbGet retrieval', function() {
     });
   });
 
-  it('should get B/123 isf and pml = None', function(done) {
-    new DdbManager().drop("B/123",{
-      fail:should.fail,
-      succeed:function() {
-        testDdbGet(
-          [{"a":"B","n":"123"}],
-          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
-          done
-        );
-      }
-    });
-  });
-
   it('should get B/123 = None and B/134431 = 28/11/2014', function(done) {
         testDdbGet(
           [ {"a":"B","n":"123"},
             {a:"B",n:"134431"}
           ],
           { "B/123":{"a":"B","n":"123","isf":"None","pml":"None"},
-            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"10,000  LBP"}
+            "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"None"}
           },
           done
         );
