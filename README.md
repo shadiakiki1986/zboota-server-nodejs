@@ -26,6 +26,8 @@ cp node_modues/app/config-sample.json node_modues/app/config.json # and edit par
 ```
 
 # Testing
+Note that some of the tests have to do with Mailgun, and hence require the proper settings in `node_modules/app/config.json`
+
 Local tests
 
     npm install --dev
@@ -41,6 +43,7 @@ Running on http://travis-ci.org
 
 # Upload to AWS
 * lambda functions: `bash scripts/upload.sh`
+ * make sure that the settings in `node_modules/app/config.json` are all correct, especially the mailgun settings
 * header message:
  * The header message is stored in a file on the S3 bucket: https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt
  * It requires the bucket zboota-server to have CORS enabled (right click on zboota-server, Permissions, Edit CORS)
@@ -49,6 +52,7 @@ Running on http://travis-ci.org
 tf=`tempfile` && echo "new message" > $tf && aws s3 cp $tf s3://zboota-server/headerMessage/headerMessage.txt --acl public-read && rm $tf
 ```
  * To update to an empty message, just replace `"new message"` with `""`
+ * To check the message: `curl https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt`
 
 # Usefule snippets
 
