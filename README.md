@@ -27,10 +27,14 @@ cp node_modues/app/config-sample.json node_modues/app/config.json # and edit par
 
 # Testing
 Local tests
-```
-npm install --dev
-npm test
-```
+
+    npm install --dev
+    npm test
+
+Running a single test
+
+    node node_modules/mocha/bin/mocha --timeout 120000 -g "mechanique from web"
+
 Running on http://travis-ci.org
 * [![Build Status](https://secure.travis-ci.org/shadiakiki1986/zboota-server-nodejs.png)](http://travis-ci.org/shadiakiki1986/zboota-server-nodejs)
 * Special note for .travis.yml file: `travis encrypt 'MAILGUN\_KEY=blabla'`
