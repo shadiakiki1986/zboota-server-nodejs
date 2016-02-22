@@ -2,12 +2,16 @@
 var WebDawlati = require('app/WebDawlati');
 var should = require('should');
 
-var testWebDawlati = function(opts,expected,done) {
+var testWebDawlati = function(opts,expected,done,notexact) {
     WebDawlati.handler(
               opts,
               function(data) {
 //                console.log(data);
-                data.should.eql(expected);
+                if(notexact) {
+                  data.lastIndexOf(expected).should.eql(0);
+                } else {
+                  data.should.eql(expected);
+                }
                 done();
               }
             );
@@ -31,17 +35,17 @@ describe('WebDawlati tests', function() {
 
 	it('Invalid vehicle type', function(done) {
 	    testWebDawlati({a:"B",n:"138288",y:"2015",t:"dummy",hp:"1 - 10"},
-		"Invalid vehicle type",done);
+		"Invalid vehicle type",done,true);
 	});
 
 	it('Invalid model year', function(done) {
 	    testWebDawlati({a:"B",n:"138288",y:"dummy",t:"Private cars",hp:"1 - 10"},
-		"Invalid model year",done);
+		"Invalid model year",done,true);
 	});
 
 	it('Invalid horse power', function(done) {
 	    testWebDawlati({a:"B",n:"138288",y:"2015",t:"Private cars",hp:"dummy"},
-		"Invalid horse power",done);
+		"Invalid horse power",done,true);
 	});
 
 	it('sample car: inspection not required', function(done) {
