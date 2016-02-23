@@ -162,7 +162,8 @@ describe('DdbManager sync', function() {
     var dm = new DdbManager();
     dm.registeredUsersDataMinDate({
       fail:function(err) { should.fail('Error: '+err);},
-      succeed:function(minDate) {
+      succeed:function(res) {
+            var minDate=res.min;
             var todayD=new Date().toISOString().substr(0,10);
             var yesterdayD=new Date();
             yesterdayD.setDate(yesterdayD.getDate()-1);
