@@ -54,7 +54,8 @@ tf=`tempfile` && echo "new message" > $tf && aws s3 cp $tf s3://zboota-server/he
  * To update to an empty message, just replace `"new message"` with `""`
  * To check the message: `curl https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt`
 
-# Usefule snippets
+# Useful snippets
 
     aws lambda list-functions
+    aws s3 cp s3://zboota-server/zboota-server-syncAll.log .
 
