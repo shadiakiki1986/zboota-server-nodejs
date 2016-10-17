@@ -45,7 +45,13 @@ var testDdbGet = function(opts,expected,done,isSync,outputTs) {
           delete data[d].dataTs;
         }
 
-        data.should.eql(expected);
+        if(Object.keys(expected).indexOf("pml")===-1) {
+          data.should.eql(expected);
+        } else {
+          var exp2 = expected;
+          exp2.pml = "Not available";
+          data.should.be.oneOf([expected,exp2]);
+        }
         done();
       },
       fail:should.fail
