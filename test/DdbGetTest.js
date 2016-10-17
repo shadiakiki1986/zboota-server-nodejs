@@ -45,13 +45,32 @@ var testDdbGet = function(opts,expected,done,isSync,outputTs) {
           delete data[d].dataTs;
         }
 
-        if(Object.keys(expected).indexOf("pml")===-1) {
-          data.should.eql(expected);
-        } else {
-          var exp2 = expected;
+        // if expected has a key "pml", try with "Not available" also
+        var exp2 = expected;
+        if(Object.keys(expected).indexOf("pml")!==-1) {
           exp2.pml = "Not available";
           data.should.be.oneOf([expected,exp2]);
+          done();
+          return;
         }
+
+        // check if any entries in expected also have pml and do the same
+        var foundAny = false;
+        for(ei in expected) {
+          if(Object.keys(expected[ei]).indexOf("pml")!==-1) {
+            exp2.pml = "Not available";
+            foundAny = true;
+          }
+        }
+
+        if(foundAny) {
+          data.should.be.oneOf([expected,exp2]);
+          done();
+          return;
+        }
+
+        // if no pml found, just make a regular comparison
+        data.should.eql(expected);
         done();
       },
       fail:should.fail
