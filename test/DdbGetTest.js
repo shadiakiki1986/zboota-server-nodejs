@@ -56,7 +56,7 @@ var testDdbGet = function(opts,expected,done,isSync,outputTs) {
 
         // check if any entries in expected also have pml and do the same
         var foundAny = false;
-        for(ei in expected) {
+        for(var ei in expected) {
           if(Object.keys(expected[ei]).indexOf("pml")!==-1) {
             exp2.pml = "Not available";
             foundAny = true;
