@@ -58,7 +58,7 @@ var testDdbGet = function(opts,expected,done,isSync,outputTs) {
         var foundAny = false;
         for(var ei in expected) {
           if(Object.keys(expected[ei]).indexOf("pml")!==-1) {
-            exp2.pml = "Not available";
+            exp2[ei].pml = "Not available";
             foundAny = true;
           }
         }
