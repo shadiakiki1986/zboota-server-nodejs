@@ -11,10 +11,17 @@ if [ ! -d scripts ]; then
   exit
 fi
 
+################################
+my_dir="$(dirname "$0")"
+source "$my_dir/ver_cmp.sh"
+
 # bash string alphabetical order comparison:
 # http://stackoverflow.com/a/32006346/4126114
-if [ "`aws --version 2>&1 |awk -F" " '{print $1}'|awk -F\/ '{print $2}'`" \< "1.7.46" ]; then
-  echo "Min aws version required 1.7.46"
+MIN_AWS_VER="1.7.46"
+ver_cmp "`aws --version 2>&1 |awk -F' ' '{print $1}'|awk -F\/ '{print $2}'`" $MIN_AWS_VER
+cmp_res="$?"
+if [ $cmp_res -eq "2" ]; then
+  echo "Min aws version required " $MIN_AWS_VER
   exit
 fi
 
@@ -51,6 +58,7 @@ upsertFunction() {
     
     aws lambda update-function-configuration \
       --function-name $1 \
+      --runtime nodejs4.3 \
       --role arn:aws:iam::886436197218:role/lambda_dynamo \
       --handler node_modules/app/$2 \
       --description "$3" \
@@ -59,7 +67,7 @@ upsertFunction() {
     echo "Creating function $1"
     aws lambda create-function \
       --function-name $1 \
-      --runtime nodejs \
+      --runtime nodejs4.3 \
       --role arn:aws:iam::886436197218:role/lambda_dynamo \
       --handler node_modules/app/$2 \
       --description "$3" \
@@ -68,7 +76,7 @@ upsertFunction() {
   fi
 }
 
-upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
+#upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
 #upsertFunction "zboota-login" "DdbUserWrapper.login" "Zboota: Login of user to get list of cars"
 #upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Zboota: Emails password to user"
 #upsertFunction "zboota-update" "DdbUserWrapper.update" "Zboota: updates list of cars of user"

@@ -3,6 +3,13 @@ Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in n
 * ''Zboota-server'': Php implementation of app backend for [zboota-app](https://github.com/shadiakiki1986/zboota-app)
 * ''Zboota-app'': gets tickets issued by Lebanese ISF, Parkmeter lebanon, ...
 
+# Requirements
+* mailgun domain
+  * as of 2017-03-29 I registered zboota.net in Amazon Route 53 and will set up `mg.zboota.net` as a custom domain in mailgun
+* aws keys
+
+Both of these are configured in the `config.json file mentioned below
+
 # Installing
 * Install aws CLI
  * http://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-with-pip
@@ -51,17 +58,19 @@ Running on http://travis-ci.org
 * Special note for .travis.yml file: `travis encrypt 'MAILGUN\_KEY=blabla'`
 
 # Upload to AWS
-* lambda functions: `bash scripts/upload.sh`
- * make sure that the settings in `node_modules/app/config.json` are all correct, especially the mailgun settings
-* header message:
- * The header message is stored in a file on the S3 bucket: https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt
- * It requires the bucket zboota-server to have CORS enabled (right click on zboota-server, Permissions, Edit CORS)
- * To update the message, use the following (of course after configuring aws CLI ( check above installation notes for more details ) ):
+1. make sure that the settings in `node_modules/app/config.json` are all correct, especially the mailgun settings
+2. edit if needed which lambda functions in `scripts/uploda.sh` are to be uploaded
+3. upload with: `bash scripts/upload.sh`
+
+# Modify the header message
+* The header message is stored in a file on the S3 bucket: https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt
+* It requires the bucket zboota-server to have CORS enabled (right click on zboota-server, Permissions, Edit CORS)
+* To update the message, use the following (of course after configuring aws CLI ( check above installation notes for more details ) ):
 ```
 tf=`tempfile` && echo "new message" > $tf && aws s3 cp $tf s3://zboota-server/headerMessage/headerMessage.txt --acl public-read && rm $tf
 ```
- * To update to an empty message, just replace `"new message"` with `""`
- * To check the message: `curl https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt`
+* To update to an empty message, just replace `"new message"` with `""`
+* To check the message: `curl https://s3-us-west-2.amazonaws.com/zboota-server/headerMessage/headerMessage.txt`
 
 # Useful snippets
 

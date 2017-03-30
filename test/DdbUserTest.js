@@ -173,7 +173,9 @@ describe('DdbUser new', function() {
   it('inexistant', function(done) {
 	var du = new DdbUser(
 	  { email:"test@abc.com" },
-	  { fail:function(err) { should.fail("Error",err); },
+	  { fail:function(err) {
+        should.fail(err);
+      },
 	    succeed: function() {
               du.context.succeed=function(res) {
                 res.should.eql({});

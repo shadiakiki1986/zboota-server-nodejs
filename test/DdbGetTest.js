@@ -46,7 +46,7 @@ var testDdbGet = function(opts,expected,done,isSync,outputTs) {
         }
 
         // if expected has a key "pml", try with "Not available" also
-        var exp2 = expected;
+        var exp2 = JSON.parse(JSON.stringify(expected));
         if(Object.keys(expected).indexOf("pml")!==-1) {
           exp2.pml = "Not available";
           data.should.be.oneOf([expected,exp2]);
@@ -106,6 +106,8 @@ var testGetFromWeb = function(data,x0,existed,expG,expM) {
     o.m.should.eql(expM);
 };
 
+var pml_B123 = "60000 LBP"; // "None"
+
 describe('DdbGet getFromWeb', function() {
 
   it('no data in ddb + no mech', function() {
@@ -162,25 +164,25 @@ describe('DdbGet retrieval', function() {
     );
   });
 
-  it('should get B/123 isf and pml = None', function(done) {
+  it('should get B/123 isf and pml', function(done) {
     new DdbManager().drop("B/123",{
       fail:should.fail,
       succeed:function() {
         testDdbGet(
           [{"a":"B","n":"123"}],
-          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
           done
         );
       }
     });
   });
 
-  it('should get B/123 = None and B/134431 = 28/11/2014', function(done) {
+  it('should get B/123 and B/134431', function(done) {
         testDdbGet(
           [ {"a":"B","n":"123"},
             {a:"B",n:"134431"}
           ],
-          { "B/123":{"a":"B","n":"123","isf":"None","pml":"None"},
+          { "B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123},
             "B/134431":{"a":"B","n":"134431","isf":"28/11/2014","pml":"None"}
           },
           done
@@ -193,7 +195,7 @@ describe('DdbGet retrieval', function() {
       succeed:function() {
         testDdbGet(
           [        {a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015"}],
-          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:pml_B123, dm: "There are no results matching the specifications you\'ve entered..."}},
           done
         );
       }
@@ -206,11 +208,11 @@ describe('DdbGet retrieval', function() {
       succeed:function() {
         testDdbGet(
           [        {a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015"}],
-          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:pml_B123, dm: "There are no results matching the specifications you\'ve entered..."}},
           function() {
             testDdbGet(
-              [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": "None", "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
-              {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+              [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": pml_B123, "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
+              {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:pml_B123, dm: "There are no results matching the specifications you\'ve entered..."}},
               done
             );
           }
@@ -231,11 +233,11 @@ describe('DdbGet consistency', function() {
       succeed:function() {
         testDdbGet(
           [        {a:"B", n:"123"}],
-          {"B/123":{a:"B", n:"123", isf:"None", pml:"None"}},
+          {"B/123":{a:"B", n:"123", isf:"None", pml:pml_B123}},
           function() {
             testDdbGet(
-              [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": "None", "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
-              {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+              [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": pml_B123, "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
+              {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:pml_B123, dm: "There are no results matching the specifications you\'ve entered..."}},
               done
             );
           }
@@ -249,12 +251,12 @@ describe('DdbGet consistency', function() {
       fail:function(err) { should.fail('Error: '+err);},
       succeed:function() {
         testDdbGet(
-          [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": "None", "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
-          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:"None", dm: "There are no results matching the specifications you\'ve entered..."}},
+          [ { "n": "123", "a": "B", "l": "test", "isf": "None", "pml": pml_B123, "hp": "1 - 10", "y": "2015", "t": "Private cars" } ],
+          {"B/123":{a:"B", n:"123", hp:"1 - 10", t:"Private cars", y:"2015", isf:"None", pml:pml_B123, dm: "There are no results matching the specifications you\'ve entered..."}},
           function() {
             testDdbGet(
               [ { "n": "123", "a": "B", "l": "test" } ],
-              {"B/123":{a:"B", n:"123", isf:"None", pml:"None"}},
+              {"B/123":{a:"B", n:"123", isf:"None", pml:pml_B123}},
               done
             );
           }
@@ -275,12 +277,12 @@ describe('DdbGet speed', function() {
         var start1 = new Date().getTime();
         testDdbGet(
           [{"a":"B","n":"123"}],
-          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
           function() {
             var end1 = new Date().getTime();
             var start2 = new Date().getTime();
             testDdbGet([{"a":"B","n":"123"}],
-              {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+              {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
               function() {
                 var end2 = new Date().getTime();
                 (end2-start2).should.below(1000); // test first that we're on a good connection
@@ -294,7 +296,6 @@ describe('DdbGet speed', function() {
     });
   });
 
-
   it('should get B/123 fast after caching but slow with force=true', function(done) {
     new DdbManager().drop("B/123",{
       fail:function(err) { should.fail('Error: '+err);},
@@ -302,26 +303,26 @@ describe('DdbGet speed', function() {
         var start1 = new Date().getTime();
         testDdbGet(
           [{"a":"B","n":"123"}],
-          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
           function() {
             var end1 = new Date().getTime();
             var start2 = new Date().getTime();
             testDdbGet([{"a":"B","n":"123"}],
-              {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+              {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
               function() {
                 var end2 = new Date().getTime();
                 var start3 = new Date().getTime();
                 testDdbGet(
                   [{"a":"B","n":"123"}],
-                  {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+                  {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
                   function() {
                     var end3 = new Date().getTime();
                     //console.log("1",end1-start1,"2",end2-start2,"3",end3-start3);
                     (end1-start1).should.above(end2-start2);
                     (end3-start3).should.above(end2-start2);
                     (end2-start2).should.below(1000);
-                    (end1-start1).should.above(4000);
-                    (end3-start3).should.above(4000);
+                    (end1-start1).should.above(2000);
+                    (end3-start3).should.above(2000);
                     done();
                   },
                   true // force
@@ -474,7 +475,7 @@ describe('DdbGet outputTs', function() {
       succeed:function() {
         testDdbGet(
           [{"a":"B","n":"123"}],
-          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
           done,
           false, // is sync
           {addedNow:true,dataNotNow:false} // expected timestamps
@@ -489,11 +490,11 @@ describe('DdbGet outputTs', function() {
       succeed:function() {
         testDdbGet(
           [{"a":"B","n":"123"}],
-          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
           function() {
             testDdbGet(
               [{"a":"B","n":"123"}],
-              {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+              {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
               done,
               true, // is sync
               {addedNow:false,dataNotNow:false} // expected timestamps
@@ -512,12 +513,12 @@ describe('DdbGet outputTs', function() {
       succeed:function() {
         testDdbGet(
           [{"a":"B","n":"123"}],
-          {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+          {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
           function() {
             setTimeout(function() {
               testDdbGet(
                 [{"a":"B","n":"123"}],
-                {"B/123":{"a":"B","n":"123","isf":"None","pml":"None"}},
+                {"B/123":{"a":"B","n":"123","isf":"None","pml":pml_B123}},
                 done,
                 false, // is sync
                 {addedNow:false,dataNotNow:true} // expected timestamps
