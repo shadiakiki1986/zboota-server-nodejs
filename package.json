@@ -26,14 +26,12 @@
     "xpath": "*",
     "xmldom": "*",
     "aws-sdk": "*",
-    "dynamodb-doc":"*",
-    "tough-cookie":"*",
-    "mailgun-js":"*",
-    "request":"*"
+    "dynamodb-doc": "*",
+    "tough-cookie": "*",
+    "mailgun-js": "*"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*"
   }
 }
-

@@ -8,7 +8,7 @@ Rewrite of [zboota-server](https://github.com/shadiakiki1986/zboota-server) in n
   * as of 2017-03-29 I registered zboota.net in Amazon Route 53 and will set up `mg.zboota.net` as a custom domain in mailgun
 * aws keys
 
-Both of these are configured in the `config.json file mentioned below
+Both of these are configured in the `config.json` file mentioned below
 
 # Installing
 * Install aws CLI
@@ -50,6 +50,10 @@ Local tests
 Running a single test
 
     node node_modules/mocha/bin/mocha --timeout 120000 -g "mechanique from web"
+
+or with npm 5.3.0 and the release of `npx`
+
+    npx mocha --timeout 120000 -g "mechanique from web"
 
 or edit the `describe` function call in the test file to be `describe.only`
 
