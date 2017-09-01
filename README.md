@@ -63,7 +63,7 @@ Running on http://travis-ci.org
 
 # Upload to AWS
 1. make sure that the settings in `node_modules/app/config.json` are all correct, especially the mailgun settings
-2. edit if needed which lambda functions in `scripts/uploda.sh` are to be uploaded
+2. edit if needed which lambda functions in `scripts/upload.sh` are to be uploaded
 3. upload with: `bash scripts/upload.sh`
 
 # Modify the header message

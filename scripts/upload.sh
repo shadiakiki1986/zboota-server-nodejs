@@ -76,6 +76,9 @@ upsertFunction() {
   fi
 }
 
+####################################################
+# UNCOMMENT WHICH FUNCTION TO UPLOAD TO AWS LAMBDA #
+####################################################
 #upsertFunction "zboota-get"   "DdbManagerWrapper.getNotSilent" "Zboota: Gets zboota of user's cars"
 #upsertFunction "zboota-login" "DdbUserWrapper.login" "Zboota: Login of user to get list of cars"
 #upsertFunction "zboota-forgotPassword" "DdbUserWrapper.forgotPassword" "Zboota: Emails password to user"
